@@ -24,7 +24,11 @@ import java.io.File;
  */
 public class NexusMobsPlugin extends JavaPlugin {
     
-    private static NexusMobsPlugin instance;
+    private static volatile NexusMobsPlugin instance;
+
+    private static void setInstance(NexusMobsPlugin inst) {
+        instance = inst;
+    }
     
     // Managers
     private ConfigManager configManager;
@@ -40,7 +44,7 @@ public class NexusMobsPlugin extends JavaPlugin {
     
     @Override
     public void onEnable() {
-        instance = this;
+        setInstance(this);
         
         // Create plugin folder
         if (!getDataFolder().exists()) {

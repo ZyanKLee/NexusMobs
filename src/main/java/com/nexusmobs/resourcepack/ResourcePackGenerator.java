@@ -8,6 +8,7 @@ import com.google.gson.JsonObject;
 import org.bukkit.Material;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.security.MessageDigest;
 import java.util.*;
@@ -282,7 +283,7 @@ public class ResourcePackGenerator {
     
     private void writeJsonFile(File file, JsonObject json) throws IOException {
         Files.createDirectories(file.getParentFile().toPath());
-        try (Writer writer = new FileWriter(file)) {
+        try (Writer writer = new FileWriter(file, StandardCharsets.UTF_8)) {
             gson.toJson(json, writer);
         }
     }

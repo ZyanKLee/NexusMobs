@@ -22,6 +22,7 @@ public class AbilityManager {
     
     private final NexusMobsPlugin plugin;
     private final Map<UUID, List<BukkitTask>> abilityTasks;
+    private final Random random = new Random();
     
     public AbilityManager(NexusMobsPlugin plugin) {
         this.plugin = plugin;
@@ -118,7 +119,6 @@ public class AbilityManager {
             }
             
             Location loc = entity.getLocation();
-            Random random = new Random();
             
             for (int i = 0; i < count; i++) {
                 // Spawn minion nearby

@@ -52,7 +52,7 @@
                 <configuration>
                     <configLocation>sun_checks.xml</configLocation>
                     <consoleOutput>true</consoleOutput>
-                    <failsOnError>false</failsOnError>
+                    <failOnViolation>false</failOnViolation>
                     <violationSeverity>warning</violationSeverity>
                     <includeTestSourceDirectory>false</includeTestSourceDirectory>
                     <suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
@@ -94,7 +94,7 @@
                 <configuration>
                     <failOnViolation>false</failOnViolation>
                     <printFailingErrors>true</printFailingErrors>
-                    <targetJdk>21</targetJdk>
+                    <targetJdk>17</targetJdk>
                     <includeTests>false</includeTests>
                 </configuration>
                 <executions>

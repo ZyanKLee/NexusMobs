@@ -29,7 +29,7 @@ jobs:
         run: mvn --batch-mode compile -DskipTests
 
       - name: Checkstyle (report only)
-        run: mvn --batch-mode checkstyle:check -DfailsOnError=false
+        run: mvn --batch-mode checkstyle:check -DfailOnViolation=false
         continue-on-error: true
 
       - name: SpotBugs (hard-fail on HIGH findings)

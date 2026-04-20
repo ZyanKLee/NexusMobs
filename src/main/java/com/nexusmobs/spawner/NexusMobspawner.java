@@ -20,6 +20,7 @@ import java.util.*;
 public class NexusMobspawner {
     
     private final NexusMobsPlugin plugin;
+    private final Random random = new Random();
     private BukkitTask scheduledTask;
     private File dataFile;
     private FileConfiguration dataCfg;
@@ -48,7 +49,6 @@ public class NexusMobspawner {
         cancelScheduledSpawns();
         double minHours = plugin.getConfigManager().getMinSpawnIntervalHours();
         double maxHours = plugin.getConfigManager().getMaxSpawnIntervalHours();
-        Random random = new Random();
         double hoursDelay = minHours + random.nextDouble() * Math.max(0.0, (maxHours - minHours));
         long ticksDelay = (long) (hoursDelay * 60 * 60 * 20L); // Convert hours to ticks
         plugin.getLogger().info("Next Nexus mob spawn scheduled in " + String.format("%.2f", hoursDelay) + " hours");
@@ -133,8 +133,6 @@ public class NexusMobspawner {
         int minDistance = plugin.getConfigManager().getMinSpawnDistance();
         int maxDistance = plugin.getConfigManager().getMaxSpawnDistance();
         int maxAttempts = plugin.getConfigManager().getMaxSpawnAttempts();
-        
-        Random random = new Random();
         
         for (int attempt = 0; attempt < maxAttempts; attempt++) {
             // Choose a random online player as reference
@@ -224,7 +222,6 @@ public class NexusMobspawner {
         
         // Spawn near player (50 blocks away)
         Location playerLoc = player.getLocation();
-        Random random = new Random();
         double angle = random.nextDouble() * 2 * Math.PI;
         int distance = 30 + random.nextInt(40);
         

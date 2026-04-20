@@ -21,6 +21,7 @@ public class ConfigManager {
 
     private final NexusMobsPlugin plugin;
     private final Map<String, NexusMobType> nexusMobTypes;
+    private final Random random = new Random();
 
     public ConfigManager(NexusMobsPlugin plugin) {
         this.plugin = plugin;
@@ -282,7 +283,7 @@ public class ConfigManager {
         }
 
         List<NexusMobType> types = new ArrayList<>(nexusMobTypes.values());
-        return types.get(new Random().nextInt(types.size()));
+        return types.get(random.nextInt(types.size()));
     }
 
     /**
