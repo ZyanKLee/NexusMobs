@@ -13,6 +13,8 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 import com.nexusmobs.models.Phase;
 import org.bukkit.NamespacedKey;
 
@@ -28,13 +30,15 @@ public class NexusMobManager {
     private final NamespacedKey nexusMobKey;
     private final AbilityManager abilityManager;
     private final Map<UUID, Integer> currentPhaseIndex;
-    
+    private final Map<UUID, BukkitTask> phaseWatcherTasks;
+
     public NexusMobManager(NexusMobsPlugin plugin) {
         this.plugin = plugin;
         this.activeNexusMobs = new HashMap<>();
         this.nexusMobKey = new NamespacedKey(plugin, "nexus_mob_type");
         this.abilityManager = new AbilityManager(plugin);
         this.currentPhaseIndex = new HashMap<>();
+        this.phaseWatcherTasks = new HashMap<>();
     }
     
     /**
@@ -93,104 +97,115 @@ public class NexusMobManager {
     }
 
     /**
-     * Start a repeating task that watches the mob's health and applies phase modifiers
+     * Start a repeating task that watches the mob's health and applies phase modifiers.
+     * Uses BukkitRunnable (not a plain lambda) so the task can cancel itself when the
+     * entity dies, preventing an orphaned task from running indefinitely (issue #2).
+     * The task handle is stored in phaseWatcherTasks so removeNexusMob() and cleanup()
+     * can also cancel it externally.
      */
     private void startPhaseWatcher(LivingEntity entity, NexusMobType type) {
         UUID id = entity.getUniqueId();
         currentPhaseIndex.put(id, -1);
 
-        Bukkit.getScheduler().runTaskTimer(plugin, () -> {
-            if (!entity.isValid() || entity.isDead()) {
-                currentPhaseIndex.remove(id);
-                return;
-            }
-
-            double maxHealth = type.getMaxHealth();
-            double currentHealth = entity.getHealth();
-            double percent = (currentHealth / Math.max(1.0, maxHealth)) * 100.0;
-
-            List<Phase> phases = type.getPhases();
-            if (phases == null || phases.isEmpty()) return;
-
-            // Simplified behavior: only a single "Next" phase will activate when mob reaches half HP
-            int targetIndex = -1;
-            double halfHp = Math.max(1.0, maxHealth) * 0.5;
-            if (currentHealth <= halfHp) {
-                targetIndex = phases.size() - 1; // apply the last configured phase as the "next" phase
-            }
-
-            int currentIndex = currentPhaseIndex.getOrDefault(id, -1);
-            if (targetIndex != -1 && targetIndex != currentIndex) {
-                // Apply phase changes
-                Phase phase = phases.get(targetIndex);
-
-                // Adjust attack damage attribute
-                if (entity.getAttribute(org.bukkit.attribute.Attribute.ATTACK_DAMAGE) != null) {
-                    double base = type.getAttackDamage();
-                    double newVal = base * phase.getAttackMultiplier();
-                    entity.getAttribute(org.bukkit.attribute.Attribute.ATTACK_DAMAGE).setBaseValue(newVal);
+        BukkitTask task = new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (!entity.isValid() || entity.isDead()) {
+                    currentPhaseIndex.remove(id);
+                    phaseWatcherTasks.remove(id);
+                    cancel();
+                    return;
                 }
 
-                // Adjust armor
-                if (entity.getAttribute(org.bukkit.attribute.Attribute.ARMOR) != null) {
-                    double baseArmor = type.getArmor();
-                    entity.getAttribute(org.bukkit.attribute.Attribute.ARMOR).setBaseValue(baseArmor + phase.getArmorBonus());
+                double maxHealth = type.getMaxHealth();
+                double currentHealth = entity.getHealth();
+                double percent = (currentHealth / Math.max(1.0, maxHealth)) * 100.0;
+
+                List<Phase> phases = type.getPhases();
+                if (phases == null || phases.isEmpty()) return;
+
+                // Simplified behavior: only a single "Next" phase will activate when mob reaches half HP
+                int targetIndex = -1;
+                double halfHp = Math.max(1.0, maxHealth) * 0.5;
+                if (currentHealth <= halfHp) {
+                    targetIndex = phases.size() - 1; // apply the last configured phase as the "next" phase
                 }
 
-                // Apply potion effects for this phase
-                for (PotionEffect pe : phase.getPotionEffects()) {
-                    entity.addPotionEffect(pe);
-                }
+                int currentIndex = currentPhaseIndex.getOrDefault(id, -1);
+                if (targetIndex != -1 && targetIndex != currentIndex) {
+                    // Apply phase changes
+                    Phase phase = phases.get(targetIndex);
 
-                // Broadcast phase change to nearby players and play effects
-                String phaseName = "Next Phase";
-                if (plugin.getLanguageManager() != null) {
-                    phaseName = plugin.getLanguageManager().getString("messages.phase-next", phaseName);
-                }
-                Map<String, String> placeholders = new HashMap<>();
-                placeholders.put("name", type.getDisplayName());
-                placeholders.put("phase", phaseName);
-
-                String msg = plugin.getConfigManager().getMessage("phase-changed", placeholders);
-
-                // Send message to players within 80 blocks
-                entity.getWorld().getPlayers().forEach(p -> {
-                    if (p.getLocation().distanceSquared(entity.getLocation()) <= (80 * 80)) {
-                        p.sendMessage(msg);
-                    }
-                });
-
-                // Play dramatic effects
-                entity.getWorld().spawnParticle(org.bukkit.Particle.EXPLOSION_EMITTER, entity.getLocation().add(0, 1, 0), 1);
-                entity.getWorld().spawnParticle(org.bukkit.Particle.CLOUD, entity.getLocation().add(0, 1, 0), 50, 1.0, 1.0, 1.0, 0.2);
-                try {
-                    entity.getWorld().playSound(entity.getLocation(), org.bukkit.Sound.ENTITY_WITHER_SPAWN, 1.2f, 0.9f);
-                } catch (Exception ignored) {}
-
-                // Final-phase special: make stronger and more dramatic
-                if (targetIndex == phases.size() - 1) {
-                    // Increase max health and set to full
-                    if (entity.getAttribute(org.bukkit.attribute.Attribute.MAX_HEALTH) != null) {
-                        double curMax = entity.getAttribute(org.bukkit.attribute.Attribute.MAX_HEALTH).getBaseValue();
-                        double newMax = Math.max(curMax, type.getMaxHealth()) * 1.25;
-                        entity.getAttribute(org.bukkit.attribute.Attribute.MAX_HEALTH).setBaseValue(newMax);
-                        entity.setHealth(newMax);
+                    // Adjust attack damage attribute
+                    if (entity.getAttribute(org.bukkit.attribute.Attribute.ATTACK_DAMAGE) != null) {
+                        double base = type.getAttackDamage();
+                        double newVal = base * phase.getAttackMultiplier();
+                        entity.getAttribute(org.bukkit.attribute.Attribute.ATTACK_DAMAGE).setBaseValue(newVal);
                     }
 
-                    // Extra visual lightning strikes (effect only)
-                    for (int i = 0; i < 3; i++) {
-                        entity.getWorld().strikeLightningEffect(entity.getLocation().add((i - 1) * 2, 0, 0));
+                    // Adjust armor
+                    if (entity.getAttribute(org.bukkit.attribute.Attribute.ARMOR) != null) {
+                        double baseArmor = type.getArmor();
+                        entity.getAttribute(org.bukkit.attribute.Attribute.ARMOR).setBaseValue(baseArmor + phase.getArmorBonus());
                     }
 
-                    // Make sure glowing is on
-                    entity.setGlowing(true);
-                }
+                    // Apply potion effects for this phase
+                    for (PotionEffect pe : phase.getPotionEffects()) {
+                        entity.addPotionEffect(pe);
+                    }
 
-                // Mark applied
-                currentPhaseIndex.put(id, targetIndex);
-                plugin.getLogger().info("Applied phase " + targetIndex + " for mob " + type.getId() + " (" + id + ")");
+                    // Broadcast phase change to nearby players and play effects
+                    String phaseName = "Next Phase";
+                    if (plugin.getLanguageManager() != null) {
+                        phaseName = plugin.getLanguageManager().getString("messages.phase-next", phaseName);
+                    }
+                    Map<String, String> placeholders = new HashMap<>();
+                    placeholders.put("name", type.getDisplayName());
+                    placeholders.put("phase", phaseName);
+
+                    String msg = plugin.getConfigManager().getMessage("phase-changed", placeholders);
+
+                    // Send message to players within 80 blocks
+                    entity.getWorld().getPlayers().forEach(p -> {
+                        if (p.getLocation().distanceSquared(entity.getLocation()) <= (80 * 80)) {
+                            p.sendMessage(msg);
+                        }
+                    });
+
+                    // Play dramatic effects
+                    entity.getWorld().spawnParticle(org.bukkit.Particle.EXPLOSION_EMITTER, entity.getLocation().add(0, 1, 0), 1);
+                    entity.getWorld().spawnParticle(org.bukkit.Particle.CLOUD, entity.getLocation().add(0, 1, 0), 50, 1.0, 1.0, 1.0, 0.2);
+                    try {
+                        entity.getWorld().playSound(entity.getLocation(), org.bukkit.Sound.ENTITY_WITHER_SPAWN, 1.2f, 0.9f);
+                    } catch (Exception ignored) {}
+
+                    // Final-phase special: make stronger and more dramatic
+                    if (targetIndex == phases.size() - 1) {
+                        // Increase max health and set to full
+                        if (entity.getAttribute(org.bukkit.attribute.Attribute.MAX_HEALTH) != null) {
+                            double curMax = entity.getAttribute(org.bukkit.attribute.Attribute.MAX_HEALTH).getBaseValue();
+                            double newMax = Math.max(curMax, type.getMaxHealth()) * 1.25;
+                            entity.getAttribute(org.bukkit.attribute.Attribute.MAX_HEALTH).setBaseValue(newMax);
+                            entity.setHealth(newMax);
+                        }
+
+                        // Extra visual lightning strikes (effect only)
+                        for (int i = 0; i < 3; i++) {
+                            entity.getWorld().strikeLightningEffect(entity.getLocation().add((i - 1) * 2, 0, 0));
+                        }
+
+                        // Make sure glowing is on
+                        entity.setGlowing(true);
+                    }
+
+                    // Mark applied
+                    currentPhaseIndex.put(id, targetIndex);
+                    plugin.getLogger().info("Applied phase " + targetIndex + " for mob " + type.getId() + " (" + id + ")");
+                }
             }
-        }, 40L, 40L); // check every 2 seconds
+        }.runTaskTimer(plugin, 40L, 40L);
+
+        phaseWatcherTasks.put(id, task);
     }
     
     /**
@@ -284,6 +299,11 @@ public class NexusMobManager {
         if (removed != null) {
             abilityManager.stopAbilities(uuid);
             plugin.getModelManager().removeModel(uuid);
+            BukkitTask watcherTask = phaseWatcherTasks.remove(uuid);
+            if (watcherTask != null && !watcherTask.isCancelled()) {
+                watcherTask.cancel();
+            }
+            currentPhaseIndex.remove(uuid);
         }
     }
     
@@ -340,12 +360,21 @@ public class NexusMobManager {
      */
     public void cleanup() {
         abilityManager.cleanup();
-        
+
+        // Cancel all phase watcher tasks
+        for (BukkitTask task : phaseWatcherTasks.values()) {
+            if (task != null && !task.isCancelled()) {
+                task.cancel();
+            }
+        }
+        phaseWatcherTasks.clear();
+        currentPhaseIndex.clear();
+
         // Remove model armor stands
         for (UUID uuid : activeNexusMobs.keySet()) {
             plugin.getModelManager().removeModel(uuid);
         }
-        
+
         activeNexusMobs.clear();
     }
 }
