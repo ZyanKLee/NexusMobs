@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - 'claude/**'
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build and Analyze
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up Java 21 (Temurin)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Compile
+        run: mvn --batch-mode compile -DskipTests
+
+      - name: Checkstyle (report only)
+        run: mvn --batch-mode checkstyle:check -DfailOnViolation=false
+        continue-on-error: true
+
+      - name: SpotBugs (hard-fail on HIGH findings)
+        run: mvn --batch-mode spotbugs:check
+
+      - name: PMD (report only)
+        run: mvn --batch-mode pmd:check -DfailOnViolation=false
+        continue-on-error: true
+
+      - name: Upload SpotBugs report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: spotbugs-report
+          path: target/spotbugsXml.xml
+          if-no-files-found: ignore
+
+      - name: Upload PMD report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pmd-report
+          path: target/pmd.xml
+          if-no-files-found: ignore
+
+      - name: Upload Checkstyle report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: checkstyle-report
+          path: target/checkstyle-result.xml
+          if-no-files-found: ignore

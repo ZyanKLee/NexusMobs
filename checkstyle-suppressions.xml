@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE suppressions PUBLIC
+    "-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN"
+    "https://checkstyle.org/dtds/suppressions_1_2.dtd">
+<suppressions>
+    <!-- Existing code uses wildcard imports; suppress rather than rewrite all files -->
+    <suppress checks="AvoidStarImport" files=".*\.java"/>
+    <!-- Variable names in some classes use PascalCase; suppress naming checks -->
+    <suppress checks="LocalVariableName" files=".*\.java"/>
+    <suppress checks="MemberName" files=".*\.java"/>
+    <!-- Magic numbers are common in game configuration code -->
+    <suppress checks="MagicNumber" files=".*\.java"/>
+    <!-- Line length: game plugin code often has long config key chains -->
+    <suppress checks="LineLength" files=".*\.java"/>
+    <!-- Import ordering is inconsistent in existing code -->
+    <suppress checks="ImportOrder" files=".*\.java"/>
+    <!-- Javadoc: not all methods are documented -->
+    <suppress checks="JavadocMethod" files=".*\.java"/>
+    <suppress checks="JavadocVariable" files=".*\.java"/>
+    <suppress checks="MissingJavadocMethod" files=".*\.java"/>
+</suppressions>
