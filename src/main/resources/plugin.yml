@@ -1,0 +1,57 @@
+name: NexusMobs
+version: '3.0.0'
+main: com.nexusmobs.NexusMobsPlugin
+api-version: '1.21'
+author: _4rubka_
+description: Advanced custom mobs system with models, abilities, custom loot and multi-language support
+website: https://github.com/4rubka/nexusmobs
+
+commands:
+  nexusmobs:
+    description: NexusMobs commands
+    usage: /nexusmobs <subcommand>
+    aliases: [nm, nexus, nmobs]
+
+permissions:
+  nexusmobs.admin:
+    description: Allows use of all NexusMobs admin commands
+    default: op
+    children:
+      nexusmobs.spawn: true
+      nexusmobs.reload: true
+      nexusmobs.give: true
+      nexusmobs.list: true
+      nexusmobs.language: true
+      
+  nexusmobs.spawn:
+    description: Allows spawning nexus mobs
+    default: op
+    
+  nexusmobs.reload:
+    description: Allows reloading configuration
+    default: op
+    
+  nexusmobs.give:
+    description: Allows giving custom items
+    default: op
+    
+  nexusmobs.list:
+    description: Allows listing configurations
+    default: op
+    
+  nexusmobs.language:
+    description: Allows changing plugin language
+    default: op
+    
+  nexusmobs.stats:
+    description: Allows viewing own statistics
+    default: true
+    
+  nexusmobs.leaderboard:
+    description: Allows viewing leaderboard
+    default: true
+
+softdepend:
+  - PlaceholderAPI
+  - Vault
+

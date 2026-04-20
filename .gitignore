@@ -1,0 +1,7 @@
+target/
+*.jar
+src.zip
+.idea/
+*.iml
+.DS_Store
+Thumbs.db

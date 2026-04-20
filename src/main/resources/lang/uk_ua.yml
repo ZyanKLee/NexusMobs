@@ -1,0 +1,478 @@
+# ==================================
+# NexusMobs Ukrainian Language File
+# ==================================
+
+# Commands
+commands:
+  help-header: "&6=== Команди NexusMobs ==="
+  help-player: "&e/nexusmobs &7- Відкрити GUI меню"
+  help-stats: "&e/nexusmobs stats [гравець] &7- Переглянути статистику"
+  help-top: "&e/nexusmobs top [кількість] &7- Переглянути таблицю лідерів"
+  help-admin-header: "&6=== Адміністративні Команди ==="
+  help-reload: "&e/nexusmobs reload &7- Перезавантажити конфігурацію"
+  help-spawn: "&e/nexusmobs spawn [тип] &7- Заспавнити некс моба"
+  help-list: "&e/nexusmobs list <mobs|items|models> &7- Показати списки"
+  help-info: "&e/nexusmobs info &7- Показати інформацію плагіну"
+  help-give: "&e/nexusmobs give <предмет> [гравець] &7- Видати кастомний предмет"
+  help-lang: "&e/nexusmobs language <мова> &7- Змінити мову"
+
+# Messages
+messages:
+  spawn-broadcast: "&6[NexusMobs] &c{name} &fз'явився на &eX: {x} Y: {y} Z: {z} &fу світі &a{world}&f!"
+  death-broadcast: "&6[NexusMobs] &c{name} &fбув переможений гравцем &e{killer}&f!"
+  reload-success: "&aКонфігурація NexusMobs успішно перезавантажена!"
+  phase-changed: "&6[NexusMobs] &c{name} &fувійшов у фазу &e{phase}&f!"
+  phase-final: "Фінальна"
+  phase-initial: "Початкова"
+  phase-next: "Наступна Фаза"
+  spawn-manual: "&aРучний спавн {name} на {x}, {y}, {z}"
+  no-permission: "&cУ вас немає дозволу на використання цієї команди!"
+  player-not-found: "&cГравця не знайдено: {player}"
+  invalid-type: "&cНевірний тип некс моба: {type}"
+  language-changed: "&aМову змінено на: &e{language}"
+  language-list: "&eДоступні мови: &f{languages}"
+  player-only: "&cЦю команду можуть використовувати тільки гравці!"
+  
+# GUI
+gui:
+  main-title: "&6&lМеню NexusMobs"
+  spawn-title: "&6&lСпавн Некс Моба"
+  leaderboard-title: "&6&lТаблиця Лідерів"
+  stats-title: "&6&lВаша Статистика"
+  items-title: "&6&lКастомні Предмети"
+  
+  spawn-mob: "&a&lСпавн Некс Моба"
+  spawn-mob-lore:
+    - "&7Натисніть для ручного"
+    - "&7спавну некс моба"
+    - "&7поруч з вами"
+    
+  leaderboard: "&e&lТаблиця Лідерів"
+  leaderboard-lore:
+    - "&7Переглянути топ"
+    - "&7мисливців на некс"
+    - "&7мобів"
+    
+  your-stats: "&b&lВаша Статистика"
+  your-stats-lore:
+    - "&7Переглянути вашу особисту"
+    - "&7статистику полювання на"
+    - "&7некс мобів"
+    
+  custom-items: "&d&lКастомні Предмети"
+  custom-items-lore:
+    - "&7Переглянути та отримати"
+    - "&7кастомні некс предмети"
+    
+  plugin-info: "&f&lІнформація Плагіну"
+  active-mobs: "&7Активних Мобів: &e{count}"
+  configured-types: "&7Налаштованих Типів: &e{count}"
+  total-kills: "&7Всього Вбивств: &e{count}"
+  
+  back: "&c&lНазад"
+  back-lore: "&7Повернутися до головного меню"
+  
+  click-to-spawn: "&aНатисніть для спавну!"
+  click-to-receive: "&a» Натисніть для отримання!"
+  
+# Stats
+stats:
+  header: "&6=== Статистика {player} ==="
+  rank: "&eРанг: &f#{rank}"
+  total-kills: "&eВсього Вбивств: &f{kills}"
+  total-damage: "&eВсього Урону: &f{damage}"
+  deaths: "&eСмертей від Мобів: &f{deaths}"
+  kd-ratio: "&eСпіввідношення K/D: &f{ratio}"
+  kills-by-type: "&eВбивства по Типах:"
+  kills-entry: "&7  - {type}: &f{count}"
+  
+  total-kills-item: "&a&lВсього Вбивств"
+  total-kills-lore:
+    - "&7Ви вбили"
+    - "&f{kills} &7некс мобів!"
+    
+  total-damage-item: "&c&lВсього Завдано Урону"
+  total-damage-lore:
+    - "&7Ви завдали"
+    - "&f{damage} &7урону!"
+    
+  deaths-item: "&4&lСмертей від Мобів"
+  deaths-lore:
+    - "&7Некс моби вбили"
+    - "&7вас &f{deaths} &7разів!"
+    
+  kd-item: "&e&lСпіввідношення K/D"
+  kd-lore:
+    - "&7Ваше співвідношення вбивств/смертей:"
+    - "&f{ratio}"
+    
+  kills-by-type-item: "&6&lВбивства по Типах"
+  no-kills: "&7Ще немає вбивств!"
+  
+# Leaderboard
+leaderboard:
+  header: "&6=== Таблиця Лідерів NexusMobs ==="
+  top-hunters: "&6&lТоп Мисливців на Некс Мобів"
+  entry: "{rank} &e{player} &7- &f{kills} вбивств"
+  your-rank: "&b&lВаш Ранг: #{rank}"
+  your-rank-lore:
+    - "&7Вбивств: &a{kills}"
+    - "&7K/D: &e{ratio}"
+  stats-lore:
+    - ""
+    - "&7Всього Вбивств: &a{kills}"
+    - "&7Всього Урону: &c{damage}"
+    - "&7Смертей: &4{deaths}"
+    - "&7K/D: &e{ratio}"
+    - ""
+    - "&8Вбивства по типах:"
+    
+# Info Command
+info:
+  header: "&6=== Інформація NexusMobs ==="
+  version: "&eВерсія: &f{version}"
+  author: "&eАвтор: &f{author}"
+  active-mobs: "&eАктивних Некс Мобів: &f{active} / {max}"
+  configured-types: "&eНалаштованих Типів: &f{count}"
+  custom-items: "&eКастомних Предметів: &f{count}"
+  custom-models: "&eКастомних Моделей: &f{count}"
+  total-kills: "&eВсього Вбивств на Сервері: &f{kills}"
+  spawn-interval: "&eІнтервал Спавну: &f{min}-{max} годин"
+  
+# List Command
+list:
+  mobs-header: "&6=== Типи Некс Мобів ({count}) ==="
+  items-header: "&6=== Кастомні Предмети ({count}) ==="
+  models-header: "&6=== Кастомні Моделі ({count}) ==="
+  mob-entry: "&e{id} &7- {name} &7({entity})"
+  item-entry: "&e{id} &7- {name} &7(CMD: {cmd})"
+  model-entry: "&e{id} &7- Матеріал: {material}, CMD: {cmd}"
+  no-mobs: "&eНемає налаштованих типів некс мобів!"
+  no-items: "&eНемає налаштованих кастомних предметів!"
+  no-models: "&eНемає налаштованих кастомних моделей!"
+  
+# Give Command
+give:
+  usage: "&eВикористання: /nexusmobs give <id_предмета> [гравець]"
+  available: "&eДоступні предмети: {items}"
+  invalid-item: "&cНевірний ID предмета: {id}"
+  success: "&aВидано {item} &aгравцю {player}"
+  received: "&aВи отримали {item}"
+
+# Mob Names (localized display names)
+mobs:
+  ancient-brute: "&c&lСтародавній Громила"
+  nether-destroyer: "&4&lНезерний Руйнівник"
+  void-hunter: "&5&lПустельний Мисливець"
+  frost-giant: "&b&lМорозний Гігант"
+  shadow-assassin: "&8&lТіньовий Асасин"
+  inferno-demon: "&6&lПекельний Демон"
+  corrupted-knight: "&2&lЗіпсований Лицар"
+  crystal-golem: "&d&lКристалевий Голем"
+  storm-warden: "&b&lХранитель Бурі"
+  tempest-rider: "&3&lВершник Бурі"
+  thunder-hulk: "&6&lГромовий Велетень"
+  raincaller: "&9&lЗаклинач Дощу"
+  sky-watcher: "&5&lНебесний Сторож"
+  arcane-sylph: "&d&lАрканна Сильфіда"
+  tidebreaker: "&b&lРуйнівник Припливів"
+  sand-wraith: "&e&lПіщаний Привид"
+  emberling: "&6&lІскринка"
+  ash-titan: "&7&lТитан Попелу"
+  bone-lord: "&8&lГосподар Кісток"
+  soul-seeker: "&5&lШукач Душ"
+  void-crawler: "&5&lПустотний Повзун"
+  glacial-warden: "&b&lЛьодовий Хранитель"
+  storm-falcon: "&e&lБуревійний Сокіл"
+
+# Custom items (display names and lore)
+custom-items:
+  storm-heart:
+    display-name: "&b&lСерце Бурі"
+    lore:
+      - "&7Сильний артефакт, наповнений енергією грози."
+  tempest-shard:
+    display-name: "&3&lОсколок Бурі"
+    lore:
+      - "&7Крихітний залишок небесної люті."
+  thunder-shard:
+    display-name: "&6&lГромовий Осколок"
+    lore:
+      - "&7Випромінює розряди при наближенні ворогів."
+  rain-cloak:
+    display-name: "&9&lПлащ Дощу"
+    lore:
+      - "&7Дарує захист у воді та покращує керування хвилями."
+  sky-ring:
+    display-name: "&5&lНебесне Кільце"
+    lore:
+      - "&7Таємне кільце, пов'язане з портальними силами."
+  arcane-feather:
+    display-name: "&d&lАрканне Перо"
+    lore:
+      - "&7Легке перо, наповнене магічним потенціалом."
+  tidebreaker-trident:
+    display-name: "&b&lТризуб Руйнівника Припливів"
+    lore:
+      - "&7Потужний тризуб, народжений з океанських глибин."
+  sand-wraith-essence:
+    display-name: "&e&lЕсенція Піщаного Привида"
+    lore:
+      - "&7Концентровані залишки піщаної магії."
+  ember-core:
+    display-name: "&6&lЯдро Іскри"
+    lore:
+      - "&7Горючий камінь, джерело вогняної енергії."
+  ash-plate:
+    display-name: "&7&lПластина Попелу"
+    lore:
+      - "&7Залишок від попілних конструкцій, міцний і легкий."
+  bone-crown:
+    display-name: "&8&lКоронa Кісток"
+    lore:
+      - "&7Символ влади над нежиттю."
+  soul-gem:
+    display-name: "&5&lКамінь Душі"
+    lore:
+      - "&7Збирає енергію впалих істот."
+  void-talon:
+    display-name: "&5&lКлинок Пустоти"
+    lore:
+      - "&7Пронизаний темними силами пустоти."
+  glacial-shard:
+    display-name: "&b&lКрижаний Осколок"
+    lore:
+      - "&7Осколок вічного льоду."
+  storm-falcon-talons:
+    display-name: "&e&lКігті Буревого Сокола"
+    lore:
+      - "&7Гострі кігті пернатого хижака бурі."
+  bruteslayer:
+    display-name: "&c&lРуйнівник Громил"
+    lore:
+      - "&7Легендарний меч, який впивається в плоть сильних ворогів."
+  void-blade:
+    display-name: "&5&lКлинок Пустоти"
+    lore:
+      - "&7Пронизаний енергією порожнечі, телепортує позаду цілі."
+  frost-fang:
+    display-name: "&b&lКігть Морозу"
+    lore:
+      - "&7Заморожує ворогів при ударі."
+  berserker-axe:
+    display-name: "&c&lСокира Берсерка"
+    lore:
+      - "&7Чим більше б'єшся, тим сильніший стаєш."
+  executioner-axe:
+    display-name: "&8&lСокира Катa"
+    lore:
+      - "&7Наносить величезну шкоду ослабленим цілям."
+  storm-bow:
+    display-name: "&e&lЛук Бурі"
+    lore:
+      - "&7Кличе блискавку при попаданні стрілою."
+  sniper-bow:
+    display-name: "&6&lЛук Снайпера"
+    lore:
+      - "&7Ідеальна точність, гарантовано критичні удари."
+  explosive-bow:
+    display-name: "&4&lВибуховий Лук"
+    lore:
+      - "&7Стріли вибухають при зіткненні."
+  sea-king-trident:
+    display-name: "&9&lТризуб Морського Короля"
+    lore:
+      - "&7Керує силою океану."
+  void-staff:
+    display-name: "&5&lПосох Пустоти"
+    lore:
+      - "&7Направляє руйнівну енергію порожнечі."
+  inferno-wand:
+    display-name: "&6&lПаличка Пекла"
+    lore:
+      - "&7Випускає руйнівні вогняні кулі."
+  frost-scepter:
+    display-name: "&b&lСкіпетр Морозу"
+    lore:
+      - "&7Заморожує ворогів, зупиняючи їх рух."
+  crystal-pickaxe:
+    display-name: "&d&lКришталевий Дзеркальщик"
+    lore:
+      - "&7Мине все миттєво, дарує додаткові руди."
+  earth-shaker:
+    display-name: "&2&lТряскач Землі"
+    lore:
+      - "&7Копає у величезних площах."
+  guardian-helmet:
+    display-name: "&9&lШолом Охоронця"
+    lore:
+      - "&7Частина набору Охоронця, дає додаткове життя."
+  guardian-chestplate:
+    display-name: "&9&lПанцир Охоронця"
+    lore:
+      - "&7Відображає шкоду назад до нападника."
+  guardian-leggings:
+    display-name: "&9&lШтани Охоронця"
+    lore:
+      - "&7Частина набору Охоронця."
+  guardian-boots:
+    display-name: "&9&lЧоботи Охоронця"
+    lore:
+      - "&7Частина набору Охоронця."
+  shadow-helmet:
+    display-name: "&8&lКапюшон Тіні"
+    lore:
+      - "&7Рухайся як тіні."
+  shadow-chestplate:
+    display-name: "&8&lПлащ Тіні"
+    lore:
+      - "&7Робить невидимим при присіданні."
+  shadow-leggings:
+    display-name: "&8&lШтани Тіні"
+    lore:
+      - "&7Частина набору Тіні."
+  shadow-boots:
+    display-name: "&8&lЧоботи Тіні"
+    lore:
+      - "&7Тихий рух та подвійний стрибок."
+  inferno-helmet:
+    display-name: "&6&lШолом Пекла"
+    lore:
+      - "&7Частина Інферно набору, імунітет до вогню."
+  inferno-chestplate:
+    display-name: "&6&lПанцир Пекла"
+    lore:
+      - "&7Пріжигає нападників."
+  inferno-leggings:
+    display-name: "&6&lШтани Пекла"
+    lore:
+      - "&7Частина набору Інферно."
+  inferno-boots:
+    display-name: "&6&lЧоботи Пекла"
+    lore:
+      - "&7Залишає за собою вогняний слід."
+  frost-helmet:
+    display-name: "&b&lКорона Морозу"
+    lore:
+      - "&7Частина морозного набору."
+  frost-chestplate:
+    display-name: "&b&lПанцир Морозу"
+    lore:
+      - "&7Заморожує ворогів поблизу."
+  frost-leggings:
+    display-name: "&b&lШтани Морозу"
+    lore:
+      - "&7Частина морозного набору."
+  frost-boots:
+    display-name: "&b&lЧоботи Морозу"
+    lore:
+      - "&7Ходьба по воді та льоду."
+  angelic-orb:
+    display-name: "&d&lНебесна Сфера"
+    lore:
+      - "&7Містична сфера божественного лікування."
+  totem-of-strength:
+    display-name: "&6&lТотем Сили"
+    lore:
+      - "&7Надає величезний приріст сили при активації."
+  speed-charm:
+    display-name: "&f&lАмулет Швидкості"
+    lore:
+      - "&7Постійний бонус до швидкості."
+  gale-cloak:
+    display-name: "&b&lПлащ Бриза"
+    lore:
+      - "&7Плащ зітканий з вітру і хмар, дає кращий контроль у політі."
+  void-shard-blade:
+    display-name: "&5&lКлинок Осколка Пустоти"
+    lore:
+      - "&7Клинок, створений з пульсуючої порожнечі." 
+  ember-aegis:
+    display-name: "&6&lЩит Іскри"
+    lore:
+      - "&7Щит, що випромінює тліючу теплоенергію."
+  frostbite-dagger:
+    display-name: "&b&lКинджал Морозя"
+    lore:
+      - "&7Кинджал, що накладає потужний ефект повільнення." 
+  thunder-lariat:
+    display-name: "&e&lГромове Ларіато"
+    lore:
+      - "&7Ларіато, що зберігає електричну енергію для удару."
+  ocean-heart:
+    display-name: "&b&lСерце Океану"
+    lore:
+      - "&7Давнє серце океану, лікує союзників."
+  shadow-lantern:
+    display-name: "&8&lЛіхтар Тіні"
+    lore:
+      - "&7Відкриває приховане і заспокоює душі."
+  stone-breaker:
+    display-name: "&2&lКамнеточитель"
+    lore:
+      - "&7Ламає камінь та руду з легкістю."
+  rift-compass:
+    display-name: "&5&lКомпас Рифту"
+    lore:
+      - "&7Вказує на найближчі рифти та аномалії."
+  spectral-cape:
+    display-name: "&d&lСпектральний Плащ"
+    lore:
+      - "&7Надає коротку здатність проходити крізь об'єкти."
+  phoenix-feather:
+    display-name: "&6&lПір'я Фенікса"
+    lore:
+      - "&7Воскресає власника у вибуху полум'я один раз."
+  runic-lens:
+    display-name: "&5&lРунична Лінза"
+    lore:
+      - "&7Відкриває приховані руни на блоках."
+
+  aether-blade:
+    display-name: "&f&lЕфірний Клинок"
+    lore:
+      - "&7Клинок зконденсованого ефіру."
+  sky-piercer:
+    display-name: "&b&lНебесний Проколювач"
+    lore:
+      - "&7Тризуб, який розтинає небеса."
+  cinder-glaive:
+    display-name: "&6&lЖаркий Клинок"
+    lore:
+      - "&7Коп'я, що випромінює жар вугілля."
+  gloom-shard:
+    display-name: "&8&lОсколок Мороку"
+    lore:
+      - "&7Осколок згущеного сутінкового світла."
+  seismic-maul:
+    display-name: "&2&lСейсмічний Молот"
+    lore:
+      - "&7Молот, що створює ударні хвилі в землі."
+  void-anchor:
+    display-name: "&5&lЯкор Пустоти"
+    lore:
+      - "&7Якір, що прикріплює рифи пустоти до цього світу."
+  lunar-amulet:
+    display-name: "&f&lМісячний Амулет"
+    lore:
+      - "&7Амулет, що вібрує під місячним сяйвом."
+  storm-breaker:
+    display-name: "&b&lРуйнівник Бурі"
+    lore:
+      - "&7Клинок, викований для розбиття сердець бурі."
+
+# Abilities
+ability:
+  lightning-aura: "&bБлискавична Аура"
+  teleport-attack: "&5Телепортаційна Атака"
+  aoe-damage: "&cОбластьова Шкода"
+  knockback: "&6Відштовхування"
+  lightning-strike: "&eУдар Блискавки"
+  summon-minions: "&aЗаклик Супутників"
+  magic-burst: "&dМагічний Вибух"
+  fire-attack: "&cВогняна Атака"
+  debuff: "&8Ослаблюючий Ефект"
+  lifesteal: "&5Поглинання Життя"
+  wither-hit: "&0Згубний Удар"
+
+

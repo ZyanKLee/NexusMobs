@@ -1,0 +1,1274 @@
+# ==========================================
+# NexusMobs Configuration v3.0.0
+# Created by: _4rubka_
+# ==========================================
+
+enabled: true
+
+# Language settings
+language:
+  # Available: en_us, uk_ua, ru_ru
+  default: en_us
+  # Allow players to change their language
+  per-player: true
+
+# Auto-save player data interval (in minutes)
+auto-save-minutes: 5
+
+# ==========================================
+# SPAWN SETTINGS
+# ==========================================
+spawn:
+  enabled: true
+  # Worlds where elite mobs can spawn
+  worlds:
+    - world
+    - world_nether
+    - world_the_end
+  # Spawn interval in hours (random between min and max)
+  min-spawn-interval-hours: 0.8  # ~48 minutes
+  max-spawn-interval-hours: 1.2  # ~72 minutes
+  # Distance from player where elite mobs attempt to spawn
+  min-distance: 800
+  max-distance: 1200
+  # Maximum attempts to find a valid spawn location
+  max-spawn-attempts: 50
+  # Maximum concurrent elite mobs in the world
+  max-concurrent-elites: 15
+  # Spawn chance (0.0 - 1.0)
+  spawn-chance: 0.85
+  # Minimum players online for spawning
+  min-players-online: 1
+
+# ==========================================
+# RESOURCE PACK SETTINGS
+# ==========================================
+resourcepack:
+  auto-generate: false
+  url: ""
+  hash: ""
+
+# ==========================================
+# CUSTOM MODELS
+# ==========================================
+models:
+  ancient_brute_model:
+    material: LEATHER_HORSE_ARMOR
+    custom-model-data: 10001
+    offset-y: -0.5
+    scale: 1.5
+    invisible-base: true
+    
+  nether_destroyer_model:
+    material: LEATHER_HORSE_ARMOR
+    custom-model-data: 10002
+    offset-y: -0.3
+    scale: 1.8
+    invisible-base: true
+    
+  void_hunter_model:
+    material: LEATHER_HORSE_ARMOR
+    custom-model-data: 10003
+    offset-y: -0.4
+    scale: 1.2
+    invisible-base: true
+    
+  frost_giant_model:
+    material: LEATHER_HORSE_ARMOR
+    custom-model-data: 10004
+    offset-y: -0.6
+    scale: 2.0
+    invisible-base: true
+    
+  shadow_assassin_model:
+    material: LEATHER_HORSE_ARMOR
+    custom-model-data: 10005
+    offset-y: -0.3
+    scale: 1.1
+    invisible-base: true
+    
+  inferno_demon_model:
+    material: LEATHER_HORSE_ARMOR
+    custom-model-data: 10006
+    offset-y: -0.4
+    scale: 1.6
+    invisible-base: true
+    
+  corrupted_knight_model:
+    material: LEATHER_HORSE_ARMOR
+    custom-model-data: 10007
+    offset-y: -0.5
+    scale: 1.7
+    invisible-base: true
+    
+  crystal_golem_model:
+    material: LEATHER_HORSE_ARMOR
+    custom-model-data: 10008
+    offset-y: -0.7
+    scale: 2.2
+    invisible-base: true
+
+# ==========================================
+# ELITE MOB TYPES (Keep this name for compatibility!)
+# ==========================================
+elite-mobs:
+  AncientBrute:
+    base-entity: ZOMBIE
+    display-name: "&c&lAncient Brute"
+    max-health: 300.0
+    attack-damage: 20.0
+    armor: 10.0
+    glowing: true
+    model: ancient_brute_model
+    boss-bar: true
+    bar-color: RED
+    ambient-particles: flame
+    potion-effects:
+      - type: speed
+        level: 1
+        duration-ticks: 2147483647
+      - type: strength
+        level: 1
+        duration-ticks: 2147483647
+    abilities:
+      aoe-damage:
+        enabled: true
+        damage: 5.0
+        radius: 5.0
+        interval-ticks: 100
+      knockback:
+        enabled: true
+        strength: 2.0
+        chance: 0.3
+      summon-minions:
+        enabled: true
+        mob-type: ZOMBIE
+        count: 3
+        chance: 0.2
+        interval-ticks: 400
+    drops:
+      - type: GOLDEN_APPLE
+        min: 1
+        max: 4
+        chance: 1.0
+      - type: DIAMOND
+        min: 2
+        max: 6
+        chance: 0.8
+      - type: NETHERITE_INGOT
+        min: 1
+        max: 2
+        chance: 0.3
+
+  NetherDestroyer:
+    base-entity: WITHER_SKELETON
+    display-name: "&4&lNether Destroyer"
+    max-health: 350.0
+    attack-damage: 25.0
+    armor: 12.0
+    glowing: true
+    model: nether_destroyer_model
+    boss-bar: true
+    bar-color: PURPLE
+    ambient-particles: drip_lava
+    potion-effects:
+      - type: fire_resistance
+        level: 1
+        duration-ticks: 2147483647
+      - type: strength
+        level: 2
+        duration-ticks: 2147483647
+    abilities:
+      aoe-damage:
+        enabled: true
+        damage: 8.0
+        radius: 6.0
+        interval-ticks: 80
+      fire-attack:
+        enabled: true
+        duration-ticks: 100
+        chance: 0.4
+    drops:
+      - type: ENCHANTED_GOLDEN_APPLE
+        min: 1
+        max: 1
+        chance: 0.2
+      - type: DIAMOND
+        min: 4
+        max: 8
+        chance: 1.0
+      - type: NETHERITE_INGOT
+        min: 2
+        max: 4
+        chance: 0.5
+      - type: ANCIENT_DEBRIS
+        min: 1
+        max: 3
+        chance: 0.4
+
+  VoidHunter:
+    base-entity: ENDERMAN
+    display-name: "&5&lVoid Hunter"
+    max-health: 280.0
+    attack-damage: 22.0
+    armor: 8.0
+    glowing: true
+    model: void_hunter_model
+    boss-bar: true
+    bar-color: PINK
+    ambient-particles: portal
+    potion-effects:
+      - type: speed
+        level: 2
+        duration-ticks: 2147483647
+      - type: invisibility
+        level: 1
+        duration-ticks: 2147483647
+    abilities:
+      teleport-attack:
+        enabled: true
+        chance: 0.5
+        interval-ticks: 60
+      debuff:
+        enabled: true
+        effects:
+          - blindness
+          - slowness
+        duration-ticks: 100
+        chance: 0.3
+    drops:
+      - type: ENDER_PEARL
+        min: 5
+        max: 10
+        chance: 1.0
+      - type: DIAMOND
+        min: 3
+        max: 7
+        chance: 0.9
+      - type: NETHERITE_INGOT
+        min: 1
+        max: 3
+        chance: 0.4
+      - type: ELYTRA
+        min: 1
+        max: 1
+        chance: 0.1
+
+  FrostGiant:
+    base-entity: IRON_GOLEM
+    display-name: "&b&lFrost Giant"
+    max-health: 500.0
+    attack-damage: 30.0
+    armor: 20.0
+    glowing: true
+    model: frost_giant_model
+    boss-bar: true
+    bar-color: BLUE
+    ambient-particles: cloud
+    potion-effects:
+      - type: slowness
+        level: 1
+        duration-ticks: 2147483647
+      - type: resistance
+        level: 2
+        duration-ticks: 2147483647
+    abilities:
+      aoe-damage:
+        enabled: true
+        damage: 10.0
+        radius: 8.0
+        interval-ticks: 120
+      debuff:
+        enabled: true
+        effects:
+          - slowness
+          - mining_fatigue
+        duration-ticks: 200
+        chance: 0.5
+    drops:
+      - type: DIAMOND_BLOCK
+        min: 1
+        max: 3
+        chance: 0.7
+      - type: NETHERITE_INGOT
+        min: 3
+        max: 5
+        chance: 0.5
+      - type: TOTEM_OF_UNDYING
+        min: 1
+        max: 1
+        chance: 0.15
+
+  ShadowAssassin:
+    base-entity: VINDICATOR
+    display-name: "&8&lShadow Assassin"
+    max-health: 200.0
+    attack-damage: 35.0
+    armor: 5.0
+    glowing: false
+    model: shadow_assassin_model
+    boss-bar: true
+    bar-color: WHITE
+    ambient-particles: smoke
+    potion-effects:
+      - type: speed
+        level: 3
+        duration-ticks: 2147483647
+      - type: invisibility
+        level: 1
+        duration-ticks: 2147483647
+    abilities:
+      teleport-attack:
+        enabled: true
+        chance: 0.7
+      debuff:
+        enabled: true
+        effects:
+          - poison
+          - weakness
+        duration-ticks: 80
+        chance: 0.4
+    drops:
+      - type: EMERALD
+        min: 10
+        max: 20
+        chance: 1.0
+      - type: DIAMOND
+        min: 5
+        max: 10
+        chance: 0.8
+
+  InfernoDemon:
+    base-entity: BLAZE
+    display-name: "&6&lInferno Demon"
+    max-health: 320.0
+    attack-damage: 28.0
+    armor: 10.0
+    glowing: true
+    model: inferno_demon_model
+    boss-bar: true
+    bar-color: YELLOW
+    ambient-particles: soul_fire_flame
+    potion-effects:
+      - type: fire_resistance
+        level: 1
+        duration-ticks: 2147483647
+      - type: strength
+        level: 2
+        duration-ticks: 2147483647
+    abilities:
+      aoe-damage:
+        enabled: true
+        damage: 7.0
+        radius: 5.0
+        interval-ticks: 90
+      fire-attack:
+        enabled: true
+        duration-ticks: 120
+        chance: 0.6
+    drops:
+      - type: BLAZE_ROD
+        min: 5
+        max: 10
+        chance: 1.0
+      - type: FIRE_CHARGE
+        min: 8
+        max: 15
+        chance: 0.9
+      - type: DIAMOND
+        min: 3
+        max: 6
+        chance: 0.7
+
+  CorruptedKnight:
+    base-entity: ZOMBIE
+    display-name: "&2&lCorrupted Knight"
+    max-health: 380.0
+    attack-damage: 24.0
+    armor: 15.0
+    glowing: true
+    model: corrupted_knight_model
+    boss-bar: true
+    bar-color: GREEN
+    ambient-particles: witch
+    potion-effects:
+      - type: resistance
+        level: 2
+        duration-ticks: 2147483647
+      - type: strength
+        level: 1
+        duration-ticks: 2147483647
+    abilities:
+      aoe-damage:
+        enabled: true
+        damage: 6.0
+        radius: 4.0
+        interval-ticks: 100
+      summon-minions:
+        enabled: true
+        mob-type: SKELETON
+        count: 4
+        chance: 0.25
+        interval-ticks: 300
+    drops:
+      - type: DIAMOND
+        min: 5
+        max: 10
+        chance: 0.85
+      - type: NETHERITE_SCRAP
+        min: 1
+        max: 3
+        chance: 0.4
+      - type: EMERALD
+        min: 3
+        max: 7
+        chance: 0.6
+
+  CrystalGolem:
+    base-entity: IRON_GOLEM
+    display-name: "&d&lCrystal Golem"
+    max-health: 600.0
+    attack-damage: 32.0
+    armor: 25.0
+    glowing: true
+    model: crystal_golem_model
+    boss-bar: true
+    bar-color: PINK
+    ambient-particles: end_rod
+    potion-effects:
+      - type: resistance
+        level: 3
+        duration-ticks: 2147483647
+      - type: regeneration
+        level: 1
+        duration-ticks: 2147483647
+    abilities:
+      aoe-damage:
+        enabled: true
+        damage: 12.0
+        radius: 10.0
+        interval-ticks: 150
+      knockback:
+        enabled: true
+        strength: 3.0
+        chance: 0.4
+    drops:
+      - type: DIAMOND_BLOCK
+        min: 2
+        max: 5
+        chance: 0.8
+      - type: EMERALD_BLOCK
+        min: 1
+        max: 3
+        chance: 0.6
+      - type: NETHERITE_BLOCK
+        min: 1
+        max: 2
+        chance: 0.3
+
+  # --------------------------
+  # New mob additions (15) - Storm / Elemental / Void themed
+  # --------------------------
+  StormWarden:
+    base-entity: PHANTOM
+    display-name: "&b&lStorm Warden"
+    max-health: 260.0
+    attack-damage: 18.0
+    armor: 8.0
+    glowing: true
+    boss-bar: true
+    bar-color: BLUE
+    ambient-particles: cloud
+    potion-effects:
+      - type: speed
+        level: 2
+        duration-ticks: 2147483647
+    abilities:
+      lightning-aura:
+        enabled: true
+        chance: 0.3
+      teleport-attack:
+        enabled: true
+        chance: 0.2
+    drops:
+      - type: DIAMOND
+        min: 1
+        max: 3
+        chance: 0.85
+      - type: STORM_HEART
+        min: 1
+        max: 1
+        chance: 0.12
+
+  TempestRider:
+    base-entity: RAVAGER
+    display-name: "&3&lTempest Rider"
+    max-health: 400.0
+    attack-damage: 26.0
+    armor: 14.0
+    glowing: true
+    boss-bar: true
+    bar-color: BLUE
+    ambient-particles: sweep_attack
+    potion-effects:
+      - type: strength
+        level: 2
+        duration-ticks: 2147483647
+    abilities:
+      aoe-damage:
+        enabled: true
+        damage: 10.0
+        radius: 6.0
+      knockback:
+        enabled: true
+        strength: 2.5
+        chance: 0.4
+    drops:
+      - type: NETHERITE_INGOT
+        min: 1
+        max: 2
+        chance: 0.4
+      - type: TEMPEST_SHARD
+        min: 1
+        max: 2
+        chance: 0.25
+
+  ThunderHulk:
+    base-entity: WITHER_SKELETON
+    display-name: "&6&lThunder Hulk"
+    max-health: 480.0
+    attack-damage: 30.0
+    armor: 18.0
+    glowing: true
+    boss-bar: true
+    bar-color: YELLOW
+    ambient-particles: electric_spark
+    potion-effects:
+      - type: resistance
+        level: 2
+        duration-ticks: 2147483647
+    abilities:
+      lightning-strike:
+        enabled: true
+        chance: 0.45
+    drops:
+      - type: NETHERITE_INGOT
+        min: 1
+        max: 3
+        chance: 0.6
+      - type: THUNDER_SHARD
+        min: 1
+        max: 2
+        chance: 0.3
+
+  Raincaller:
+    base-entity: DROWNED
+    display-name: "&9&lRaincaller"
+    max-health: 220.0
+    attack-damage: 16.0
+    armor: 6.0
+    glowing: false
+    boss-bar: true
+    bar-color: BLUE
+    ambient-particles: rain
+    potion-effects:
+      - type: water_breathing
+        level: 1
+        duration-ticks: 2147483647
+    abilities:
+      summon-minions:
+        enabled: true
+        mob-type: DOLPHIN
+        count: 2
+        chance: 0.25
+    drops:
+      - type: PRISMARINE_SHARD
+        min: 4
+        max: 8
+        chance: 0.9
+      - type: RAIN_CLOAK
+        min: 1
+        max: 1
+        chance: 0.12
+
+  SkyWatcher:
+    base-entity: ENDERMAN
+    display-name: "&5&lSky Watcher"
+    max-health: 300.0
+    attack-damage: 22.0
+    armor: 7.0
+    glowing: true
+    boss-bar: true
+    bar-color: PINK
+    ambient-particles: portal
+    potion-effects:
+      - type: invisibility
+        level: 1
+        duration-ticks: 2147483647
+    abilities:
+      teleport-attack:
+        enabled: true
+        chance: 0.6
+    drops:
+      - type: ENDER_PEARL
+        min: 2
+        max: 6
+        chance: 1.0
+      - type: SKY_RING
+        min: 1
+        max: 1
+        chance: 0.08
+
+  ArcaneSylph:
+    base-entity: SHULKER
+    display-name: "&d&lArcane Sylph"
+    max-health: 180.0
+    attack-damage: 14.0
+    armor: 3.0
+    glowing: false
+    boss-bar: false
+    ambient-particles: enchant
+    potion-effects:
+      - type: slow_falling
+        level: 1
+        duration-ticks: 2147483647
+    abilities:
+      magic-burst:
+        enabled: true
+        chance: 0.4
+    drops:
+      - type: LAPIS_LAZULI
+        min: 6
+        max: 12
+        chance: 0.9
+      - type: ARCANE_FEATHER
+        min: 1
+        max: 2
+        chance: 0.2
+
+  Tidebreaker:
+    base-entity: GUARDIAN
+    display-name: "&b&lTidebreaker"
+    max-health: 340.0
+    attack-damage: 24.0
+    armor: 12.0
+    glowing: true
+    boss-bar: true
+    bar-color: BLUE
+    ambient-particles: bubble
+    potion-effects:
+      - type: water_breathing
+        level: 1
+        duration-ticks: 2147483647
+    abilities:
+      aoe-damage:
+        enabled: true
+        damage: 9.0
+        radius: 5.0
+    drops:
+      - type: TRIDENT
+        min: 1
+        max: 1
+        chance: 0.15
+      - type: TIDEBREAKER_TRIDENT
+        min: 1
+        max: 1
+        chance: 0.08
+
+  SandWraith:
+    base-entity: HUSK
+    display-name: "&e&lSand Wraith"
+    max-health: 240.0
+    attack-damage: 20.0
+    armor: 5.0
+    glowing: false
+    boss-bar: true
+    bar-color: YELLOW
+    ambient-particles: sand
+    potion-effects:
+      - type: blindness
+        level: 1
+        duration-ticks: 200
+    abilities:
+      debuff:
+        enabled: true
+        effects:
+          - slowness
+          - weakness
+        duration-ticks: 120
+        chance: 0.45
+    drops:
+      - type: SAND
+        min: 16
+        max: 32
+        chance: 1.0
+      - type: SAND_WRAITH_ESSENCE
+        min: 1
+        max: 2
+        chance: 0.25
+
+  Emberling:
+    base-entity: MAGMA_CUBE
+    display-name: "&6&lEmberling"
+    max-health: 200.0
+    attack-damage: 18.0
+    armor: 4.0
+    glowing: true
+    boss-bar: false
+    ambient-particles: flame
+    potion-effects:
+      - type: fire_resistance
+        level: 1
+        duration-ticks: 2147483647
+    abilities:
+      fire-attack:
+        enabled: true
+        chance: 0.5
+    drops:
+      - type: BLAZE_ROD
+        min: 2
+        max: 6
+        chance: 0.9
+      - type: EMBER_CORE
+        min: 1
+        max: 1
+        chance: 0.18
+
+  AshTitan:
+    # Use the Giant entity for a towering boss
+    base-entity: GIANT
+    display-name: "&7&lAsh Titan"
+    max-health: 600.0
+    attack-damage: 34.0
+    armor: 20.0
+    glowing: true
+    boss-bar: true
+    bar-color: WHITE
+    ambient-particles: ash
+    # keep resistance but remove any invisibility to ensure visual presence
+    potion-effects:
+      - type: resistance
+        level: 2
+        duration-ticks: 2147483647
+    abilities:
+      knockback:
+        enabled: true
+        strength: 3.5
+        chance: 0.6
+    # Phases increase in difficulty as HP drops
+    phases:
+      - threshold: 75
+        attack-multiplier: 1.1
+        armor-bonus: 2
+        potion-effects:
+          - type: strength
+            level: 1
+            duration-ticks: 2147483647
+      - threshold: 50
+        attack-multiplier: 1.25
+        armor-bonus: 4
+        potion-effects:
+          - type: strength
+            level: 2
+            duration-ticks: 2147483647
+          - type: speed
+            level: 1
+            duration-ticks: 2147483647
+      - threshold: 25
+        attack-multiplier: 1.5
+        armor-bonus: 6
+        potion-effects:
+          - type: strength
+            level: 3
+            duration-ticks: 2147483647
+          - type: speed
+            level: 2
+            duration-ticks: 2147483647
+          - type: damage_resistance
+            level: 1
+            duration-ticks: 2147483647
+    drops:
+      - type: COAL_BLOCK
+        min: 4
+        max: 8
+        chance: 1.0
+      - type: ASH_PLATE
+        min: 1
+        max: 2
+        chance: 0.45
+      - type: ASH_PLATE
+        min: 1
+        max: 1
+        chance: 0.15
+
+  BoneLord:
+    base-entity: SKELETON
+    display-name: "&8&lBone Lord"
+    max-health: 260.0
+    attack-damage: 22.0
+    armor: 6.0
+    glowing: false
+    boss-bar: true
+    bar-color: WHITE
+    ambient-particles: soul
+    potion-effects:
+      - type: slow
+        level: 1
+        duration-ticks: 2147483647
+    abilities:
+      summon-minions:
+        enabled: true
+        mob-type: SKELETON
+        count: 3
+        chance: 0.35
+    drops:
+      - type: BONE
+        min: 8
+        max: 20
+        chance: 1.0
+      - type: BONE_CROWN
+        min: 1
+        max: 1
+        chance: 0.09
+
+  SoulSeeker:
+    base-entity: SLIME
+    display-name: "&5&lSoul Seeker"
+    max-health: 300.0
+    attack-damage: 20.0
+    armor: 5.0
+    glowing: true
+    boss-bar: false
+    ambient-particles: heart
+    potion-effects:
+      - type: regeneration
+        level: 1
+        duration-ticks: 2147483647
+    abilities:
+      lifesteal:
+        enabled: true
+        value: 0.1
+        chance: 1.0
+    drops:
+      - type: SLIME_BALL
+        min: 6
+        max: 18
+        chance: 1.0
+      - type: SOUL_GEM
+        min: 1
+        max: 1
+        chance: 0.14
+
+  VoidCrawler:
+    base-entity: SHULKER
+    display-name: "&5&lVoid Crawler"
+    max-health: 220.0
+    attack-damage: 18.0
+    armor: 4.0
+    glowing: false
+    boss-bar: false
+    ambient-particles: portal
+    potion-effects:
+      - type: blindness
+        level: 1
+        duration-ticks: 120
+    abilities:
+      wither-hit:
+        enabled: true
+        chance: 0.4
+    drops:
+      - type: OBSIDIAN
+        min: 3
+        max: 8
+        chance: 0.9
+      - type: VOID_TALON
+        min: 1
+        max: 1
+        chance: 0.11
+
+  GlacialWarden:
+    base-entity: IRON_GOLEM
+    display-name: "&b&lGlacial Warden"
+    max-health: 520.0
+    attack-damage: 28.0
+    armor: 20.0
+    glowing: true
+    boss-bar: true
+    bar-color: BLUE
+    ambient-particles: snowball
+    potion-effects:
+      - type: slowness
+        level: 2
+        duration-ticks: 2147483647
+    abilities:
+      aoe-damage:
+        enabled: true
+        damage: 11.0
+        radius: 8.0
+    drops:
+      - type: PACKED_ICE
+        min: 2
+        max: 6
+        chance: 0.85
+      - type: GLACIAL_SHARD
+        min: 1
+        max: 2
+        chance: 0.18
+
+  StormFalcon:
+    base-entity: PHANTOM
+    display-name: "&e&lStorm Falcon"
+    max-health: 200.0
+    attack-damage: 20.0
+    armor: 4.0
+    glowing: true
+    boss-bar: false
+    ambient-particles: cloud
+    potion-effects:
+      - type: speed
+        level: 3
+        duration-ticks: 2147483647
+    abilities:
+      lightning-strike:
+        enabled: true
+        chance: 0.35
+    drops:
+      - type: FEATHER
+        min: 4
+        max: 12
+        chance: 1.0
+      - type: STORM_FALCON_TALONS
+        min: 1
+        max: 1
+        chance: 0.12
+
+# ==========================================
+# CUSTOM ITEMS
+# ==========================================
+custom-items:
+  # === WEAPONS - SWORDS ===
+  BruteSlayer:
+    material: NETHERITE_SWORD
+    display-name: "&c&lBrute Slayer"
+    lore:
+      - "&7A legendary blade forged"
+      - "&7from the essence of fallen elites"
+      - ""
+      - "&8Drops from: Ancient Brute"
+    custom-model-data: 20001
+    unbreakable: true
+    drop-chance: 0.05
+    enchantments:
+      SHARPNESS: 7
+      FIRE_ASPECT: 2
+      LOOTING: 3
+    abilities:
+      LIFESTEAL:
+        value: 0.15
+        chance: 1.0
+      FIRE_ASPECT_AOE:
+        value: 3.0
+        chance: 0.3
+        duration-ticks: 100
+      CRITICAL_BOOST:
+        value: 0.25
+        chance: 0.2
+
+  VoidBlade:
+    material: NETHERITE_SWORD
+    display-name: "&5&lVoid Blade"
+    lore:
+      - "&7Infused with void energy"
+      - "&7Teleport behind enemies"
+    custom-model-data: 20002
+    unbreakable: true
+    drop-chance: 0.04
+    enchantments:
+      SHARPNESS: 8
+      SWEEPING_EDGE: 3
+    abilities:
+      WITHER_HIT:
+        value: 2
+        chance: 0.5
+        duration-ticks: 100
+
+  FrostFang:
+    material: DIAMOND_SWORD
+    display-name: "&b&lFrost Fang"
+    lore:
+      - "&7Freezes enemies on hit"
+    custom-model-data: 20003
+    unbreakable: true
+    drop-chance: 0.06
+    enchantments:
+      SHARPNESS: 6
+      KNOCKBACK: 2
+    abilities:
+      SLOWNESS_HIT:
+        level: 3
+        chance: 0.8
+        duration-ticks: 100
+
+  # === WEAPONS - AXES ===
+  BerserkerAxe:
+    material: NETHERITE_AXE
+    display-name: "&c&lBerserker's Rage"
+    lore:
+      - "&7The more you fight"
+      - "&7the stronger you become"
+    custom-model-data: 20010
+    unbreakable: true
+    drop-chance: 0.045
+    enchantments:
+      SHARPNESS: 7
+      EFFICIENCY: 5
+    abilities:
+      LIFESTEAL:
+        value: 0.2
+        chance: 1.0
+      CRITICAL_BOOST:
+        value: 0.4
+        chance: 0.3
+
+  ExecutionerAxe:
+    material: DIAMOND_AXE
+    display-name: "&8&lExecutioner's Axe"
+    lore:
+      - "&7Deals massive damage"
+      - "&7to low-health enemies"
+    custom-model-data: 20011
+    unbreakable: true
+    drop-chance: 0.05
+    enchantments:
+      SHARPNESS: 6
+      EFFICIENCY: 4
+    abilities:
+      KNOCKBACK_BOOST:
+        value: 2.5
+        chance: 0.5
+
+  # === WEAPONS - BOWS ===
+  StormBow:
+    material: BOW
+    display-name: "&e&lStorm Bow"
+    lore:
+      - "&7Summons lightning strikes"
+    custom-model-data: 20020
+    unbreakable: true
+    drop-chance: 0.04
+    enchantments:
+      POWER: 6
+      INFINITY: 1
+      PUNCH: 2
+    abilities:
+      LIGHTNING_STRIKE:
+        chance: 0.25
+
+  SniperBow:
+    material: BOW
+    display-name: "&6&lSniper's Precision"
+    lore:
+      - "&7Perfect accuracy"
+      - "&7Guaranteed critical hits"
+    custom-model-data: 20021
+    unbreakable: true
+    drop-chance: 0.05
+    enchantments:
+      POWER: 8
+      INFINITY: 1
+    abilities:
+      CRITICAL_BOOST:
+        value: 0.5
+        chance: 1.0
+
+  # === STAFFS/WANDS ===
+  VoidStaff:
+    material: BLAZE_ROD
+    display-name: "&5&lVoid Staff"
+    lore:
+      - "&7Channel the power of the void"
+      - ""
+      - "&8Right-click to unleash"
+      - "&8devastating shockwave"
+    custom-model-data: 20040
+    unbreakable: true
+    drop-chance: 0.03
+    abilities:
+      SHOCKWAVE:
+        value: 6.0
+        cooldown-ticks: 200
+
+  InfernoWand:
+    material: BLAZE_ROD
+    display-name: "&6&lInferno Wand"
+    lore:
+      - "&7Unleash devastating fireballs"
+    custom-model-data: 20041
+    unbreakable: true
+    drop-chance: 0.04
+    abilities:
+      FIREBALL:
+        value: 2.0
+        cooldown-ticks: 100
+
+  FrostScepter:
+    material: BLAZE_ROD
+    display-name: "&b&lFrost Scepter"
+    lore:
+      - "&7Freeze your enemies solid"
+    custom-model-data: 20042
+    unbreakable: true
+    drop-chance: 0.035
+    abilities:
+      ICE_BLAST:
+        value: 5.0
+        cooldown-ticks: 150
+
+  # === ARMOR - GUARDIAN SET ===
+  GuardianHelmet:
+    material: NETHERITE_HELMET
+    display-name: "&9&lGuardian's Helmet"
+    lore:
+      - "&7Part of the Guardian set"
+      - "&7Grants extra health"
+    custom-model-data: 30001
+    unbreakable: true
+    drop-chance: 0.03
+    enchantments:
+      PROTECTION: 6
+      RESPIRATION: 3
+    abilities:
+      HEALTH_BOOST:
+        value: 2.0
+        chance: 1.0
+
+  GuardianChestplate:
+    material: NETHERITE_CHESTPLATE
+    display-name: "&9&lGuardian's Plate"
+    lore:
+      - "&7Part of the Guardian set"
+      - "&7Reflects damage to attackers"
+    custom-model-data: 30002
+    unbreakable: true
+    drop-chance: 0.03
+    enchantments:
+      PROTECTION: 7
+      THORNS: 4
+    abilities:
+      DAMAGE_RESISTANCE:
+        value: 0.25
+        chance: 1.0
+      THORNS_AOE:
+        value: 5.0
+        chance: 0.3
+
+  GuardianLeggings:
+    material: NETHERITE_LEGGINGS
+    display-name: "&9&lGuardian's Leggings"
+    lore:
+      - "&7Part of the Guardian set"
+    custom-model-data: 30003
+    unbreakable: true
+    drop-chance: 0.03
+    enchantments:
+      PROTECTION: 6
+      SWIFT_SNEAK: 3
+    abilities:
+      HEALTH_BOOST:
+        value: 2.0
+        chance: 1.0
+
+  GuardianBoots:
+    material: NETHERITE_BOOTS
+    display-name: "&9&lGuardian's Boots"
+    lore:
+      - "&7Part of the Guardian set"
+    custom-model-data: 30004
+    unbreakable: true
+    drop-chance: 0.03
+    enchantments:
+      PROTECTION: 6
+      FEATHER_FALLING: 5
+    abilities:
+      SPEED_BOOST:
+        value: 1.0
+        chance: 1.0
+
+  # === ARMOR - SHADOW SET ===
+  ShadowHelmet:
+    material: NETHERITE_HELMET
+    display-name: "&8&lShadow Hood"
+    lore:
+      - "&7Part of the Shadow set"
+      - "&7Move like the shadows"
+    custom-model-data: 30010
+    unbreakable: true
+    drop-chance: 0.025
+    enchantments:
+      PROTECTION: 5
+      AQUA_AFFINITY: 1
+    abilities:
+      NIGHT_VISION:
+        chance: 1.0
+
+  ShadowBoots:
+    material: NETHERITE_BOOTS
+    display-name: "&8&lShadow Steppers"
+    lore:
+      - "&7Part of the Shadow set"
+      - "&7Silent movement"
+    custom-model-data: 30013
+    unbreakable: true
+    drop-chance: 0.025
+    enchantments:
+      PROTECTION: 5
+      FEATHER_FALLING: 4
+      SOUL_SPEED: 3
+    abilities:
+      SPEED_BOOST:
+        value: 2.5
+        chance: 1.0
+      DOUBLE_JUMP:
+        cooldown-ticks: 60
+
+  # === UTILITY ITEMS ===
+  AngelicOrb:
+    material: HEART_OF_THE_SEA
+    display-name: "&d&lAngelic Orb"
+    lore:
+      - "&7A mystical orb containing"
+      - "&7divine healing power"
+      - ""
+      - "&8Right-click to heal"
+    custom-model-data: 40001
+    drop-chance: 0.02
+    abilities:
+      HEAL_BURST:
+        value: 10.0
+        cooldown-ticks: 600
+
+  SpeedCharm:
+    material: FEATHER
+    display-name: "&f&lCharm of Swiftness"
+    lore:
+      - "&7Permanent speed boost"
+    custom-model-data: 40003
+    drop-chance: 0.04
+    abilities:
+      SPEED_BOOST:
+        value: 2.0
+        chance: 1.0
+
+# ==========================================
+# MESSAGES
+# ==========================================
+messages:
+  spawn-broadcast: "&6[NexusMobs] &c{name} &fhas appeared at &eX: {x} Y: {y} Z: {z} &fin world &a{world}&f!"
+  death-broadcast: "&6[NexusMobs] &c{name} &fhas been defeated by &e{killer}&f!"
+  reload-success: "&aNexusMobs configuration reloaded successfully!"
+  spawn-manual: "&aManually spawned {name} at {x}, {y}, {z}"
+  no-permission: "&cYou don't have permission to use this command!"
+  player-not-found: "&cPlayer not found!"
+  invalid-type: "&cInvalid mob type!"
+  language-changed: "&aLanguage changed to: &e{language}"
+  language-list: "&eAvailable languages: &f{languages}"

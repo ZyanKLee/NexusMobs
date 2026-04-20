@@ -1,0 +1,169 @@
+# ==================================
+# NexusMobs English Language File
+# ==================================
+
+# Commands
+commands:
+  help-header: "&6=== NexusMobs Commands ==="
+  help-player: "&e/nexusmobs &7- Open GUI menu"
+  help-stats: "&e/nexusmobs stats [player] &7- View statistics"
+  help-top: "&e/nexusmobs top [count] &7- View leaderboard"
+  help-admin-header: "&6=== Admin Commands ==="
+  help-reload: "&e/nexusmobs reload &7- Reload configuration"
+  help-spawn: "&e/nexusmobs spawn [type] &7- Spawn a nexus mob"
+  help-list: "&e/nexusmobs list <mobs|items|models> &7- List configurations"
+  help-info: "&e/nexusmobs info &7- Show plugin information"
+  help-give: "&e/nexusmobs give <item> [player] &7- Give custom item"
+  help-lang: "&e/nexusmobs language <lang> &7- Change language"
+
+# Messages
+messages:
+  spawn-broadcast: "&6[NexusMobs] &c{name} &fhas appeared at &eX: {x} Y: {y} Z: {z} &fin world &a{world}&f!"
+  death-broadcast: "&6[NexusMobs] &c{name} &fhas been defeated by &e{killer}&f!"
+  reload-success: "&aNexusMobs configuration reloaded successfully!"
+  phase-changed: "&6[NexusMobs] &c{name} &fhas entered &e{phase}&f phase!"
+  phase-final: "Final"
+  phase-initial: "Initial"
+  phase-next: "Next Phase"
+  spawn-manual: "&aManually spawned {name} at {x}, {y}, {z}"
+  no-permission: "&cYou don't have permission to use this command!"
+  player-not-found: "&cPlayer not found: {player}"
+  invalid-type: "&cInvalid nexus mob type: {type}"
+  language-changed: "&aLanguage changed to: &e{language}"
+  language-list: "&eAvailable languages: &f{languages}"
+  player-only: "&cThis command can only be used by players!"
+  
+# GUI
+gui:
+  main-title: "&6&lNexusMobs Menu"
+  spawn-title: "&6&lSpawn Nexus Mob"
+  leaderboard-title: "&6&lLeaderboard"
+  stats-title: "&6&lYour Statistics"
+  items-title: "&6&lCustom Items"
+  
+  spawn-mob: "&a&lSpawn Nexus Mob"
+  spawn-mob-lore:
+    - "&7Click to manually spawn"
+    - "&7a nexus mob near you"
+    
+  leaderboard: "&e&lLeaderboard"
+  leaderboard-lore:
+    - "&7View the top"
+    - "&7nexus mob hunters"
+    
+  your-stats: "&b&lYour Statistics"
+  your-stats-lore:
+    - "&7View your personal"
+    - "&7nexus mob statistics"
+    
+  custom-items: "&d&lCustom Items"
+  custom-items-lore:
+    - "&7Browse and get"
+    - "&7custom nexus items"
+    
+  plugin-info: "&f&lPlugin Info"
+  active-mobs: "&7Active Mobs: &e{count}"
+  configured-types: "&7Configured Types: &e{count}"
+  total-kills: "&7Total Server Kills: &e{count}"
+  
+  back: "&c&lBack"
+  back-lore: "&7Return to main menu"
+  
+  click-to-spawn: "&aClick to spawn!"
+  click-to-receive: "&a» Click to receive!"
+  
+# Stats
+stats:
+  header: "&6=== {player}'s Statistics ==="
+  rank: "&eRank: &f#{rank}"
+  total-kills: "&eTotal Kills: &f{kills}"
+  total-damage: "&eTotal Damage: &f{damage}"
+  deaths: "&eDeaths to Mobs: &f{deaths}"
+  kd-ratio: "&eK/D Ratio: &f{ratio}"
+  kills-by-type: "&eKills by Type:"
+  kills-entry: "&7  - {type}: &f{count}"
+  
+  total-kills-item: "&a&lTotal Kills"
+  total-kills-lore:
+    - "&7You have killed"
+    - "&f{kills} &7nexus mobs!"
+    
+  total-damage-item: "&c&lTotal Damage Dealt"
+  total-damage-lore:
+    - "&7You have dealt"
+    - "&f{damage} &7damage!"
+    
+  deaths-item: "&4&lDeaths to Mobs"
+  deaths-lore:
+    - "&7Nexus mobs have killed"
+    - "&7you &f{deaths} &7times!"
+    
+  kd-item: "&e&lK/D Ratio"
+  kd-lore:
+    - "&7Your kill/death ratio:"
+    - "&f{ratio}"
+    
+  kills-by-type-item: "&6&lKills by Type"
+  no-kills: "&7No kills yet!"
+  
+# Leaderboard
+leaderboard:
+  header: "&6=== Nexus Mob Leaderboard ==="
+  top-hunters: "&6&lTop Nexus Hunters"
+  entry: "{rank} &e{player} &7- &f{kills} kills"
+  your-rank: "&b&lYour Rank: #{rank}"
+  your-rank-lore:
+    - "&7Kills: &a{kills}"
+    - "&7K/D: &e{ratio}"
+  stats-lore:
+    - ""
+    - "&7Total Kills: &a{kills}"
+    - "&7Total Damage: &c{damage}"
+    - "&7Deaths: &4{deaths}"
+    - "&7K/D Ratio: &e{ratio}"
+    - ""
+    - "&8Kills by Type:"
+    
+# Info Command
+info:
+  header: "&6=== NexusMobs Info ==="
+  version: "&eVersion: &f{version}"
+  author: "&eAuthor: &f{author}"
+  active-mobs: "&eActive Nexus Mobs: &f{active} / {max}"
+  configured-types: "&eConfigured Types: &f{count}"
+  custom-items: "&eCustom Items: &f{count}"
+  custom-models: "&eCustom Models: &f{count}"
+  total-kills: "&eTotal Server Kills: &f{kills}"
+  spawn-interval: "&eSpawn Interval: &f{min}-{max} hours"
+  
+# List Command
+list:
+  mobs-header: "&6=== Nexus Mob Types ({count}) ==="
+  items-header: "&6=== Custom Items ({count}) ==="
+  models-header: "&6=== Custom Models ({count}) ==="
+  mob-entry: "&e{id} &7- {name} &7({entity})"
+  item-entry: "&e{id} &7- {name} &7(CMD: {cmd})"
+  model-entry: "&e{id} &7- Material: {material}, CMD: {cmd}"
+  no-mobs: "&eNo nexus mob types configured!"
+  no-items: "&eNo custom items configured!"
+  no-models: "&eNo custom models configured!"
+  
+# Give Command
+give:
+  usage: "&eUsage: /nexusmobs give <item_id> [player]"
+  available: "&eAvailable items: {items}"
+  invalid-item: "&cInvalid item ID: {id}"
+  success: "&aGave {item} &ato {player}"
+  received: "&aYou received {item}"
+
+# Mob Names (localized display names)
+mobs:
+  ancient-brute: "&c&lAncient Brute"
+  nether-destroyer: "&4&lNether Destroyer"
+  void-hunter: "&5&lVoid Hunter"
+  frost-giant: "&b&lFrost Giant"
+  shadow-assassin: "&8&lShadow Assassin"
+  inferno-demon: "&6&lInferno Demon"
+  corrupted-knight: "&2&lCorrupted Knight"
+  crystal-golem: "&d&lCrystal Golem"
+

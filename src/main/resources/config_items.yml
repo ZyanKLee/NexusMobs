@@ -1,0 +1,947 @@
+
+# ==========================================
+# CUSTOM ITEMS - WEAPONS
+# ==========================================
+custom-items:
+  # === SWORDS ===
+  BruteSlayer:
+    material: NETHERITE_SWORD
+    display-name: "&c&lBrute Slayer"
+    lore:
+      - "&7A legendary blade forged"
+      - "&7from the essence of fallen elites"
+      - ""
+      - "&8Drops from: Ancient Brute"
+    custom-model-data: 20001
+    unbreakable: true
+    drop-chance: 0.05
+    enchantments:
+      SHARPNESS: 7
+      FIRE_ASPECT: 2
+      LOOTING: 3
+    abilities:
+      LIFESTEAL:
+        value: 0.15
+        chance: 1.0
+      FIRE_ASPECT_AOE:
+        value: 3.0
+        chance: 0.3
+        duration-ticks: 100
+
+  VoidBlade:
+    material: NETHERITE_SWORD
+    display-name: "&5&lVoid Blade"
+    lore:
+      - "&7Infused with void energy"
+      - "&7Teleport behind enemies"
+    custom-model-data: 20002
+    unbreakable: true
+    drop-chance: 0.04
+    enchantments:
+      SHARPNESS: 8
+      SWEEPING_EDGE: 3
+    abilities:
+      WITHER_HIT:
+        value: 2
+        chance: 0.5
+        duration-ticks: 100
+      TELEPORT:
+        value: 10.0
+        cooldown-ticks: 200
+
+  FrostFang:
+    material: DIAMOND_SWORD
+    display-name: "&b&lFrost Fang"
+    lore:
+      - "&7Freezes enemies on hit"
+    custom-model-data: 20003
+    unbreakable: true
+    drop-chance: 0.06
+    enchantments:
+      SHARPNESS: 6
+      KNOCKBACK: 2
+    abilities:
+      SLOWNESS_HIT:
+        level: 3
+        chance: 0.8
+        duration-ticks: 100
+
+  # === AXES ===
+  BerserkerAxe:
+    material: NETHERITE_AXE
+    display-name: "&c&lBerserker's Rage"
+    lore:
+      - "&7The more you fight,"
+      - "&7the stronger you become"
+    custom-model-data: 20010
+    unbreakable: true
+    drop-chance: 0.045
+    enchantments:
+      SHARPNESS: 7
+      EFFICIENCY: 5
+    abilities:
+      LIFESTEAL:
+        value: 0.2
+        chance: 1.0
+      CRITICAL_BOOST:
+        value: 0.4
+        chance: 0.3
+
+  ExecutionerAxe:
+    material: DIAMOND_AXE
+    display-name: "&8&lExecutioner's Axe"
+    lore:
+      - "&7Deals massive damage"
+      - "&7to low-health enemies"
+    custom-model-data: 20011
+    unbreakable: true
+    drop-chance: 0.05
+    enchantments:
+      SHARPNESS: 6
+      EFFICIENCY: 4
+    abilities:
+      KNOCKBACK_BOOST:
+        value: 2.5
+        chance: 0.5
+
+  # === BOWS ===
+  StormBow:
+    material: BOW
+    display-name: "&e&lStorm Bow"
+    lore:
+      - "&7Summons lightning strikes"
+    custom-model-data: 20020
+    unbreakable: true
+    drop-chance: 0.04
+    enchantments:
+      POWER: 6
+      INFINITY: 1
+      PUNCH: 2
+    abilities:
+      LIGHTNING_STRIKE:
+        chance: 0.25
+
+  SniperBow:
+    material: BOW
+    display-name: "&6&lSniper's Precision"
+    lore:
+      - "&7Perfect accuracy"
+      - "&7Guaranteed critical hits"
+    custom-model-data: 20021
+    unbreakable: true
+    drop-chance: 0.05
+    enchantments:
+      POWER: 8
+      INFINITY: 1
+    abilities:
+      CRITICAL_BOOST:
+        value: 0.5
+        chance: 1.0
+
+  ExplosiveBow:
+    material: BOW
+    display-name: "&4&lExplosive Bow"
+    lore:
+      - "&7Arrows explode on impact"
+    custom-model-data: 20022
+    unbreakable: true
+    drop-chance: 0.03
+    enchantments:
+      POWER: 5
+      FLAME: 1
+    abilities:
+      EXPLOSION_ARROW:
+        value: 2.0
+        cooldown-ticks: 60
+
+  # === TRIDENTS ===
+  SeaKingTrident:
+    material: TRIDENT
+    display-name: "&9&lSea King's Trident"
+    lore:
+      - "&7Command the ocean's power"
+    custom-model-data: 20030
+    unbreakable: true
+    drop-chance: 0.025
+    enchantments:
+      IMPALING: 5
+      LOYALTY: 3
+      RIPTIDE: 3
+    abilities:
+      LIGHTNING_STRIKE:
+        chance: 0.3
+
+  # === STAFFS/WANDS ===
+  VoidStaff:
+    material: BLAZE_ROD
+    display-name: "&5&lVoid Staff"
+    lore:
+      - "&7Channel the power of the void"
+      - ""
+      - "&8Right-click to unleash"
+      - "&8devastating shockwave"
+    custom-model-data: 20040
+    unbreakable: true
+    drop-chance: 0.03
+    abilities:
+      SHOCKWAVE:
+        value: 6.0
+        cooldown-ticks: 200
+      TELEPORT:
+        value: 15.0
+        cooldown-ticks: 100
+
+  InfernoWand:
+    material: BLAZE_ROD
+    display-name: "&6&lInferno Wand"
+    lore:
+      - "&7Unleash devastating fireballs"
+    custom-model-data: 20041
+    unbreakable: true
+    drop-chance: 0.04
+    abilities:
+      FIREBALL:
+        value: 2.0
+        cooldown-ticks: 100
+
+  FrostScepter:
+    material: BLAZE_ROD
+    display-name: "&b&lFrost Scepter"
+    lore:
+      - "&7Freeze your enemies solid"
+    custom-model-data: 20042
+    unbreakable: true
+    drop-chance: 0.035
+    abilities:
+      ICE_BLAST:
+        value: 5.0
+        cooldown-ticks: 150
+      SLOWNESS_AOE:
+        level: 3
+        radius: 5.0
+        duration-ticks: 100
+
+  # === PICKAXES ===
+  CrystalPickaxe:
+    material: NETHERITE_PICKAXE
+    display-name: "&d&lCrystal Harvester"
+    lore:
+      - "&7Mines everything instantly"
+      - "&7Gives extra ores"
+    custom-model-data: 20050
+    unbreakable: true
+    drop-chance: 0.02
+    enchantments:
+      EFFICIENCY: 7
+      FORTUNE: 5
+      MENDING: 1
+    abilities:
+      LUCKY_MINING:
+        multiplier: 2.0
+        chance: 0.3
+
+  # === SHOVELS ===
+  EarthShaker:
+    material: NETHERITE_SHOVEL
+    display-name: "&2&lEarth Shaker"
+    lore:
+      - "&7Digs in massive areas"
+    custom-model-data: 20060
+    unbreakable: true
+    drop-chance: 0.025
+    enchantments:
+      EFFICIENCY: 6
+      SILK_TOUCH: 1
+
+# ==========================================
+# CUSTOM ITEMS - ARMOR SETS
+# ==========================================
+
+  # === GUARDIAN SET ===
+  GuardianHelmet:
+    material: NETHERITE_HELMET
+    display-name: "&9&lGuardian's Helmet"
+    lore:
+      - "&7Part of the Guardian set"
+      - "&7Grants extra health"
+    custom-model-data: 30001
+    unbreakable: true
+    drop-chance: 0.03
+    enchantments:
+      PROTECTION: 6
+      RESPIRATION: 3
+    abilities:
+      HEALTH_BOOST:
+        value: 2.0
+        chance: 1.0
+
+  GuardianChestplate:
+    material: NETHERITE_CHESTPLATE
+    display-name: "&9&lGuardian's Plate"
+    lore:
+      - "&7Part of the Guardian set"
+      - "&7Reflects damage to attackers"
+    custom-model-data: 30002
+    unbreakable: true
+    drop-chance: 0.03
+    enchantments:
+      PROTECTION: 7
+      THORNS: 4
+    abilities:
+      DAMAGE_RESISTANCE:
+        value: 0.25
+        chance: 1.0
+      THORNS_AOE:
+        value: 5.0
+        chance: 0.3
+
+  GuardianLeggings:
+    material: NETHERITE_LEGGINGS
+    display-name: "&9&lGuardian's Leggings"
+    lore:
+      - "&7Part of the Guardian set"
+    custom-model-data: 30003
+    unbreakable: true
+    drop-chance: 0.03
+    enchantments:
+      PROTECTION: 6
+      SWIFT_SNEAK: 3
+    abilities:
+      HEALTH_BOOST:
+        value: 2.0
+        chance: 1.0
+
+  GuardianBoots:
+    material: NETHERITE_BOOTS
+    display-name: "&9&lGuardian's Boots"
+    lore:
+      - "&7Part of the Guardian set"
+    custom-model-data: 30004
+    unbreakable: true
+    drop-chance: 0.03
+    enchantments:
+      PROTECTION: 6
+      FEATHER_FALLING: 5
+    abilities:
+      SPEED_BOOST:
+        value: 1.0
+        chance: 1.0
+
+  # === SHADOW SET ===
+  ShadowHelmet:
+    material: NETHERITE_HELMET
+    display-name: "&8&lShadow Hood"
+    lore:
+      - "&7Part of the Shadow set"
+      - "&7Move like the shadows"
+    custom-model-data: 30010
+    unbreakable: true
+    drop-chance: 0.025
+    enchantments:
+      PROTECTION: 5
+      AQUA_AFFINITY: 1
+    abilities:
+      NIGHT_VISION:
+        chance: 1.0
+
+  ShadowChestplate:
+    material: NETHERITE_CHESTPLATE
+    display-name: "&8&lShadow Cloak"
+    lore:
+      - "&7Part of the Shadow set"
+      - "&7Become invisible when sneaking"
+    custom-model-data: 30011
+    unbreakable: true
+    drop-chance: 0.025
+    enchantments:
+      PROTECTION: 5
+    abilities:
+      INVISIBILITY_SNEAK:
+        duration-ticks: 100
+
+  ShadowLeggings:
+    material: NETHERITE_LEGGINGS
+    display-name: "&8&lShadow Pants"
+    lore:
+      - "&7Part of the Shadow set"
+    custom-model-data: 30012
+    unbreakable: true
+    drop-chance: 0.025
+    enchantments:
+      PROTECTION: 5
+      SWIFT_SNEAK: 3
+    abilities:
+      SPEED_BOOST:
+        value: 2.0
+        chance: 1.0
+
+  ShadowBoots:
+    material: NETHERITE_BOOTS
+    display-name: "&8&lShadow Steppers"
+    lore:
+      - "&7Part of the Shadow set"
+      - "&7Silent movement"
+    custom-model-data: 30013
+    unbreakable: true
+    drop-chance: 0.025
+    enchantments:
+      PROTECTION: 5
+      FEATHER_FALLING: 4
+      SOUL_SPEED: 3
+    abilities:
+      SPEED_BOOST:
+        value: 2.5
+        chance: 1.0
+      DOUBLE_JUMP:
+        cooldown-ticks: 60
+
+  # === INFERNO SET ===
+  InfernoHelmet:
+    material: NETHERITE_HELMET
+    display-name: "&6&lInferno Helmet"
+    lore:
+      - "&7Part of the Inferno set"
+      - "&7Immune to fire"
+    custom-model-data: 30020
+    unbreakable: true
+    drop-chance: 0.02
+    enchantments:
+      PROTECTION: 5
+      FIRE_PROTECTION: 5
+    abilities:
+      FIRE_IMMUNITY:
+        chance: 1.0
+
+  InfernoChestplate:
+    material: NETHERITE_CHESTPLATE
+    display-name: "&6&lInferno Plate"
+    lore:
+      - "&7Part of the Inferno set"
+      - "&7Burns attackers"
+    custom-model-data: 30021
+    unbreakable: true
+    drop-chance: 0.02
+    enchantments:
+      PROTECTION: 6
+      FIRE_PROTECTION: 5
+      THORNS: 3
+    abilities:
+      FIRE_THORNS:
+        damage: 4.0
+        duration-ticks: 80
+        chance: 0.5
+
+  InfernoLeggings:
+    material: NETHERITE_LEGGINGS
+    display-name: "&6&lInferno Leggings"
+    lore:
+      - "&7Part of the Inferno set"
+    custom-model-data: 30022
+    unbreakable: true
+    drop-chance: 0.02
+    enchantments:
+      PROTECTION: 5
+      FIRE_PROTECTION: 5
+    abilities:
+      FIRE_IMMUNITY:
+        chance: 1.0
+
+  InfernoBoots:
+    material: NETHERITE_BOOTS
+    display-name: "&6&lInferno Boots"
+    lore:
+      - "&7Part of the Inferno set"
+      - "&7Leave fire trail"
+    custom-model-data: 30023
+    unbreakable: true
+    drop-chance: 0.02
+    enchantments:
+      PROTECTION: 5
+      FIRE_PROTECTION: 5
+      FEATHER_FALLING: 4
+    abilities:
+      FIRE_TRAIL:
+        duration-ticks: 60
+
+  # === FROST SET ===
+  FrostHelmet:
+    material: DIAMOND_HELMET
+    display-name: "&b&lFrost Crown"
+    lore:
+      - "&7Part of the Frost set"
+    custom-model-data: 30030
+    unbreakable: true
+    drop-chance: 0.03
+    enchantments:
+      PROTECTION: 5
+      RESPIRATION: 3
+    abilities:
+      ICE_ASPECT:
+        chance: 0.3
+
+  FrostChestplate:
+    material: DIAMOND_CHESTPLATE
+    display-name: "&b&lFrost Plate"
+    lore:
+      - "&7Part of the Frost set"
+      - "&7Freezes nearby enemies"
+    custom-model-data: 30031
+    unbreakable: true
+    drop-chance: 0.03
+    enchantments:
+      PROTECTION: 6
+      THORNS: 3
+    abilities:
+      FREEZE_AURA:
+        radius: 3.0
+        slowness-level: 2
+        duration-ticks: 60
+
+  FrostLeggings:
+    material: DIAMOND_LEGGINGS
+    display-name: "&b&lFrost Leggings"
+    lore:
+      - "&7Part of the Frost set"
+    custom-model-data: 30032
+    unbreakable: true
+    drop-chance: 0.03
+    enchantments:
+      PROTECTION: 5
+    abilities:
+      ICE_ASPECT:
+        chance: 0.3
+
+  FrostBoots:
+    material: DIAMOND_BOOTS
+    display-name: "&b&lFrost Boots"
+    lore:
+      - "&7Part of the Frost set"
+      - "&7Walk on water"
+    custom-model-data: 30033
+    unbreakable: true
+    drop-chance: 0.03
+    enchantments:
+      PROTECTION: 5
+      FEATHER_FALLING: 4
+      FROST_WALKER: 2
+    abilities:
+      ICE_PATH:
+        chance: 1.0
+
+  # === UTILITY ITEMS ===
+  AngelicOrb:
+    material: HEART_OF_THE_SEA
+    display-name: "&d&lAngelic Orb"
+    lore:
+      - "&7A mystical orb containing"
+      - "&7divine healing power"
+      - ""
+      - "&8Right-click to heal"
+    custom-model-data: 40001
+    drop-chance: 0.02
+    abilities:
+      HEAL_BURST:
+        value: 10.0
+        cooldown-ticks: 600
+
+  TotemOfStrength:
+    material: TOTEM_OF_UNDYING
+    display-name: "&6&lTotem of Strength"
+    lore:
+      - "&7Grants massive power boost"
+      - "&7when activated"
+    custom-model-data: 40002
+    drop-chance: 0.01
+    abilities:
+      STRENGTH_BOOST:
+        level: 3
+        duration-ticks: 600
+        cooldown-ticks: 1200
+
+  SpeedCharm:
+    material: FEATHER
+    display-name: "&f&lCharm of Swiftness"
+    lore:
+      - "&7Permanent speed boost"
+    custom-model-data: 40003
+    drop-chance: 0.04
+    abilities:
+      SPEED_BOOST:
+        value: 2.0
+        chance: 1.0
+
+  # === NEW CUSTOM LOOT ITEMS FOR ADDED MOBS ===
+  STORM_HEART:
+    material: NETHER_STAR
+    display-name: "&b&lStorm Heart"
+    lore:
+      - "&7A core of raw storm energy."
+    custom-model-data: 50001
+    drop-chance: 0.01
+
+  TEMPEST_SHARD:
+    material: AMETHYST_SHARD
+    display-name: "&3&lTempest Shard"
+    lore:
+      - "&7Shimmering fragment of tempest power."
+    custom-model-data: 50002
+    drop-chance: 0.05
+
+  THUNDER_SHARD:
+    material: GLOWSTONE_DUST
+    display-name: "&6&lThunder Shard"
+    lore:
+      - "&7Crackling with contained lightning."
+    custom-model-data: 50003
+    drop-chance: 0.06
+
+  RAIN_CLOAK:
+    material: ELYTRA
+    display-name: "&9&lRain Cloak"
+    lore:
+      - "&7A cloak woven from storm clouds."
+    custom-model-data: 50004
+    drop-chance: 0.02
+
+  SKY_RING:
+    material: GOLD_INGOT
+    display-name: "&5&lSky Ring"
+    lore:
+      - "&7A ring attuned to the skies."
+    custom-model-data: 50005
+    drop-chance: 0.02
+
+  ARCANE_FEATHER:
+    material: FEATHER
+    display-name: "&d&lArcane Feather"
+    lore:
+      - "&7Grants subtle arcane lift."
+    custom-model-data: 50006
+    drop-chance: 0.08
+
+  TIDEBREAKER_TRIDENT:
+    material: TRIDENT
+    display-name: "&b&lTidebreaker Trident"
+    lore:
+      - "&7A trident imbued with tidal wrath."
+    custom-model-data: 50007
+    drop-chance: 0.015
+    enchantments:
+      IMPALING: 5
+
+  SAND_WRAITH_ESSENCE:
+    material: SAND
+    display-name: "&e&lSand Wraith Essence"
+    lore:
+      - "&7Ethereal sand distilled into essence."
+    custom-model-data: 50008
+    drop-chance: 0.07
+
+  EMBER_CORE:
+    material: BLAZE_POWDER
+    display-name: "&6&lEmber Core"
+    lore:
+      - "&7A smoldering core of ember energy."
+    custom-model-data: 50009
+    drop-chance: 0.06
+
+  ASH_PLATE:
+    material: BLACKSTONE
+    display-name: "&7&lAsh Plate"
+    lore:
+      - "&7A plate forged from compacted ash."
+    custom-model-data: 50010
+    drop-chance: 0.04
+
+  BONE_CROWN:
+    material: SKELETON_SKULL
+    display-name: "&8&lBone Crown"
+    lore:
+      - "&7A crown made from the bones of the fallen."
+    custom-model-data: 50011
+    drop-chance: 0.01
+
+  SOUL_GEM:
+    material: EXPERIENCE_BOTTLE
+    display-name: "&5&lSoul Gem"
+    lore:
+      - "&7Collects the lingering spirit energy."
+    custom-model-data: 50012
+    drop-chance: 0.03
+
+  VOID_TALON:
+    material: NETHERITE_SCRAP
+    display-name: "&5&lVoid Talon"
+    lore:
+      - "&7A talon forged in voidlight."
+    custom-model-data: 50013
+    drop-chance: 0.02
+
+  GLACIAL_SHARD:
+    material: PACKED_ICE
+    display-name: "&b&lGlacial Shard"
+    lore:
+      - "&7Chilled fragment of eternal frost."
+    custom-model-data: 50014
+    drop-chance: 0.05
+
+  STORM_FALCON_TALONS:
+    material: FEATHER
+    display-name: "&e&lStorm Falcon Talons"
+    lore:
+      - "&7Talons of a fierce aerial predator."
+    custom-model-data: 50015
+    drop-chance: 0.04
+
+  # === ADDITIONAL ASSISTANT-ADDED ITEMS ===
+  GaleCloak:
+    material: ELYTRA
+    display-name: "&b&lGale Cloak"
+    lore:
+      - "&7A cloak woven from wind and cloud."
+      - "&7Grants glide control and speed." 
+    custom-model-data: 60001
+    unbreakable: true
+    drop-chance: 0.02
+    abilities:
+      SPEED_BOOST:
+        value: 1.2
+        chance: 1.0
+
+  VoidShardBlade:
+    material: NETHERITE_SWORD
+    display-name: "&5&lVoid Shard Blade"
+    lore:
+      - "&7A blade forged from collapsed void shards."
+    custom-model-data: 60002
+    unbreakable: true
+    drop-chance: 0.015
+    enchantments:
+      SHARPNESS: 8
+    abilities:
+      TELEPORT:
+        value: 6.0
+        cooldown-ticks: 120
+
+  EmberAegis:
+    material: SHIELD
+    display-name: "&6&lEmber Aegis"
+    lore:
+      - "&7A shield that radiates smoldering heat." 
+    custom-model-data: 60003
+    unbreakable: true
+    drop-chance: 0.02
+    abilities:
+      FIRE_IMMUNITY:
+        chance: 1.0
+
+  FrostbiteDagger:
+    material: DIAMOND_SWORD
+    display-name: "&b&lFrostbite Dagger"
+    lore:
+      - "&7A dagger chilled to the bone, slows on hit." 
+    custom-model-data: 60004
+    unbreakable: true
+    drop-chance: 0.03
+    abilities:
+      SLOWNESS_HIT:
+        level: 4
+        chance: 0.9
+        duration-ticks: 120
+
+  ThunderLariat:
+    material: LEAD
+    display-name: "&e&lThunder Lariat"
+    lore:
+      - "&7A loop crackling with stored lightning." 
+    custom-model-data: 60005
+    unbreakable: true
+    drop-chance: 0.02
+    abilities:
+      LIGHTNING_STRIKE:
+        chance: 0.4
+
+  OceanHeart:
+    material: HEART_OF_THE_SEA
+    display-name: "&b&lOcean Heart"
+    lore:
+      - "&7An ancient heart of the ocean, heals allies." 
+    custom-model-data: 60006
+    drop-chance: 0.01
+    abilities:
+      HEAL_BURST:
+        value: 8.0
+        cooldown-ticks: 600
+
+  ShadowLantern:
+    material: SOUL_LANTERN
+    display-name: "&8&lShadow Lantern"
+    lore:
+      - "&7Reveals hidden things and soothes the soul." 
+    custom-model-data: 60007
+    drop-chance: 0.03
+    abilities:
+      NIGHT_VISION:
+        chance: 1.0
+
+  StoneBreaker:
+    material: NETHERITE_PICKAXE
+    display-name: "&2&lStone Breaker"
+    lore:
+      - "&7Crushes stone and ore with ease." 
+    custom-model-data: 60008
+    unbreakable: true
+    drop-chance: 0.02
+    enchantments:
+      EFFICIENCY: 7
+      FORTUNE: 4
+
+  RiftCompass:
+    material: COMPASS
+    display-name: "&5&lRift Compass"
+    lore:
+      - "&7Points toward nearby rifts and anomalies." 
+    custom-model-data: 60009
+    drop-chance: 0.025
+
+  SpectralCape:
+    material: LEATHER_CHESTPLATE
+    display-name: "&d&lSpectral Cape"
+    lore:
+      - "&7A cape granting brief phasing ability." 
+    custom-model-data: 60010
+    unbreakable: true
+    drop-chance: 0.02
+    abilities:
+      INVISIBILITY_SNEAK:
+        duration-ticks: 120
+
+  PhoenixFeather:
+    material: FEATHER
+    display-name: "&6&lPhoenix Feather"
+    lore:
+      - "&7Revives you with a burst of flame upon death." 
+    custom-model-data: 60011
+    drop-chance: 0.01
+    abilities:
+      RESURRECT:
+        chance: 1.0
+        cooldown-ticks: 2400
+
+  RunicLens:
+    material: EYE_OF_ENDER
+    display-name: "&5&lRunic Lens"
+    lore:
+      - "&7Reveals hidden rune patterns on blocks." 
+    custom-model-data: 60012
+    drop-chance: 0.03
+
+  # === EXTRA NEW ITEMS ===
+  AetherBlade:
+    material: NETHERITE_SWORD
+    display-name: "&f&lAether Blade"
+    lore:
+      - "&7A sword of condensed aether." 
+    custom-model-data: 70001
+    unbreakable: true
+    drop-chance: 0.01
+    enchantments:
+      SHARPNESS: 8
+    abilities:
+      TELEPORT:
+        value: 8.0
+        cooldown-ticks: 120
+
+  SkyPiercer:
+    material: TRIDENT
+    display-name: "&b&lSky Piercer"
+    lore:
+      - "&7A trident that rends the skies." 
+    custom-model-data: 70002
+    drop-chance: 0.015
+    enchantments:
+      IMPALING: 5
+    abilities:
+      LIGHTNING_STRIKE:
+        chance: 0.35
+
+  CinderGlaive:
+    material: NETHERITE_SWORD
+    display-name: "&6&lCinder Glaive"
+    lore:
+      - "&7A polearm searing with ember flames." 
+    custom-model-data: 70003
+    unbreakable: true
+    drop-chance: 0.02
+    abilities:
+      FIREBALL:
+        value: 3.0
+        cooldown-ticks: 100
+
+  GloomShard:
+    material: NETHERITE_SCRAP
+    display-name: "&8&lGloom Shard"
+    lore:
+      - "&7A shard of condensed twilight." 
+    custom-model-data: 70004
+    drop-chance: 0.04
+
+  SeismicMaul:
+    material: NETHERITE_AXE
+    display-name: "&2&lSeismic Maul"
+    lore:
+      - "&7A maul that sends shockwaves through earth." 
+    custom-model-data: 70005
+    unbreakable: true
+    drop-chance: 0.015
+    abilities:
+      SHOCKWAVE:
+        value: 8.0
+        cooldown-ticks: 160
+
+  VoidAnchor:
+    material: NETHER_STAR
+    display-name: "&5&lVoid Anchor"
+    lore:
+      - "&7Anchors void rifts to this plane." 
+    custom-model-data: 70006
+    drop-chance: 0.008
+
+  LunarAmulet:
+    material: GOLD_NUGGET
+    display-name: "&f&lLunar Amulet"
+    lore:
+      - "&7An amulet that hums with moonlight." 
+    custom-model-data: 70007
+    drop-chance: 0.03
+    abilities:
+      HEAL_BURST:
+        value: 5.0
+        cooldown-ticks: 800
+
+  StormBreaker:
+    material: NETHERITE_SWORD
+    display-name: "&b&lStorm Breaker"
+    lore:
+      - "&7A blade forged to shatter storm cores." 
+    custom-model-data: 70008
+    unbreakable: true
+    drop-chance: 0.012
+    abilities:
+      LIGHTNING_STRIKE:
+        chance: 0.5
+
+# ==========================================
+# MESSAGES
+# ==========================================
+messages:
+  spawn-broadcast: "&6[NexusMobs] &c{name} &fhas appeared at &eX: {x} Y: {y} Z: {z} &fin world &a{world}&f!"
+  death-broadcast: "&6[NexusMobs] &c{name} &fhas been defeated by &e{killer}&f!"
+  reload-success: "&aNexusMobs configuration reloaded successfully!"
+  spawn-manual: "&aManually spawned {name} at {x}, {y}, {z}"
+  no-permission: "&cYou don't have permission to use this command!"
+  player-not-found: "&cPlayer not found!"
+  invalid-type: "&cInvalid nexus mob type!"
+  language-changed: "&aLanguage changed to: &e{language}"
+  language-list: "&eAvailable languages: &f{languages}"
+
