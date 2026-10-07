@@ -829,7 +829,7 @@ custom-items:
         cooldown-ticks: 2400
 
   RunicLens:
-    material: EYE_OF_ENDER
+    material: ENDER_EYE
     display-name: "&5&lRunic Lens"
     lore:
       - "&7Reveals hidden rune patterns on blocks." 

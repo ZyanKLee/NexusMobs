@@ -5,12 +5,14 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.io.File;
 import java.util.*;
 
 /**
@@ -22,6 +24,8 @@ public class CustomItemManager {
     private final Map<String, CustomItem> customItems;
     private final NamespacedKey customItemKey;
     private final Map<UUID, Map<ItemAbilityType, Long>> cooldowns;
+
+    private static final String ITEMS_FILE = "config_items.yml";
     
     public CustomItemManager(NexusMobsPlugin plugin) {
         this.plugin = plugin;
@@ -36,13 +40,32 @@ public class CustomItemManager {
      */
     private void loadCustomItems() {
         customItems.clear();
-        
-        ConfigurationSection itemsSection = plugin.getConfig().getConfigurationSection("custom-items");
-        if (itemsSection == null) {
+
+        // Items live in config_items.yml (#28). Entries under "custom-items" in config.yml are
+        // loaded afterwards and override the same id, so existing installs keep their edits.
+        File itemsFile = new File(plugin.getDataFolder(), ITEMS_FILE);
+        if (!itemsFile.exists()) {
+            plugin.saveResource(ITEMS_FILE, false);
+        }
+        loadCustomItems(YamlConfiguration.loadConfiguration(itemsFile).getConfigurationSection("custom-items"));
+
+        ConfigurationSection overrides = plugin.getConfig().getConfigurationSection("custom-items");
+        if (overrides != null && !overrides.getKeys(false).isEmpty()) {
+            plugin.getLogger().info("Custom items from config.yml override " + ITEMS_FILE + ": "
+                    + String.join(", ", overrides.getKeys(false)));
+            loadCustomItems(overrides);
+        }
+
+        if (customItems.isEmpty()) {
             plugin.getLogger().info("No custom items configured.");
+        }
+    }
+
+    private void loadCustomItems(ConfigurationSection itemsSection) {
+        if (itemsSection == null) {
             return;
         }
-        
+
         for (String key : itemsSection.getKeys(false)) {
             ConfigurationSection itemSection = itemsSection.getConfigurationSection(key);
             if (itemSection == null) continue;
