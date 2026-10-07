@@ -181,10 +181,11 @@ public class NexusMobspawner {
     /**
      * Find a safe Y coordinate at the given X and Z
      */
-    private Location findSafeY(World world, int x, int z) {
-        // Start from world max height and go down
-        int maxY = world.getMaxHeight() - 1;
-        int minY = world.getMinHeight();
+    Location findSafeY(World world, int x, int z) {
+        // Start from the top and go down. y+1 (head) and y-1 (ground) must stay inside the
+        // world too: getMaxHeight() is exclusive, getMinHeight() inclusive (#11)
+        int maxY = world.getMaxHeight() - 2;
+        int minY = world.getMinHeight() + 1;
         
         for (int y = maxY; y >= minY; y--) {
             Block block = world.getBlockAt(x, y, z);
