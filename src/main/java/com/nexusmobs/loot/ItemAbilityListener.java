@@ -312,10 +312,12 @@ public class ItemAbilityListener implements Listener {
     }
     
     private boolean handleTeleportAbility(Player player, ItemAbility ability) {
-        Location target = player.getTargetBlock(null, (int) ability.getValue()).getLocation();
-        target.setY(target.getY() + 1);
-        target.setPitch(player.getLocation().getPitch());
-        target.setYaw(player.getLocation().getYaw());
+        // never into a wall or ceiling (getTargetBlock + 1 could be inside a block, #9)
+        Location target = TeleportTargets.find(player.getEyeLocation(), ability.getValue());
+        if (target == null) {
+            player.sendMessage("§cThere is no room to teleport there!");
+            return false; // no cooldown for a failed teleport
+        }
         
         // Visual effect at start
         player.getWorld().spawnParticle(Particle.PORTAL, player.getLocation().add(0, 1, 0), 
@@ -325,7 +327,7 @@ public class ItemAbilityListener implements Listener {
         player.teleport(target);
         
         // Visual effect at destination
-        player.getWorld().spawnParticle(Particle.PORTAL, target.add(0, 1, 0), 
+        player.getWorld().spawnParticle(Particle.PORTAL, target.clone().add(0, 1, 0), 
                 50, 0.5, 1, 0.5, 0.1);
         
         return true;
