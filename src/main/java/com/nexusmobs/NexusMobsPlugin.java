@@ -6,6 +6,7 @@ import com.nexusmobs.effects.EffectsManager;
 import com.nexusmobs.gui.GuiListener;
 import com.nexusmobs.gui.GuiManager;
 import com.nexusmobs.leaderboard.LeaderboardManager;
+import com.nexusmobs.listeners.NexusMobChunkListener;
 import com.nexusmobs.listeners.NexusMobDeathListener;
 import com.nexusmobs.listeners.NexusMobDamageListener;
 import com.nexusmobs.loot.CustomItemManager;
@@ -71,6 +72,10 @@ public class NexusMobsPlugin extends JavaPlugin {
         
         // Register listeners
         registerListeners();
+
+        // Nexus mobs that are already loaded (server restart, plugin reload) get their
+        // abilities, phases and boss bar back; later chunk loads are handled by the listener (#22)
+        nexusMobManager.reattachLoadedMobs();
         
         // Register commands
         registerCommands();
@@ -140,6 +145,8 @@ public class NexusMobsPlugin extends JavaPlugin {
                 new NexusMobDeathListener(this), this);
         getServer().getPluginManager().registerEvents(
                 new NexusMobDamageListener(this), this);
+        getServer().getPluginManager().registerEvents(
+                new NexusMobChunkListener(nexusMobManager), this);
         getServer().getPluginManager().registerEvents(
                 new ItemAbilityListener(customItemManager), this);
         getServer().getPluginManager().registerEvents(

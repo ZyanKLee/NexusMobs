@@ -6,6 +6,7 @@ import com.nexusmobs.models.NexusMob;
 import com.nexusmobs.models.NexusMobType;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.boss.BarColor;
 import org.bukkit.entity.Entity;
@@ -31,11 +32,16 @@ public class NexusMobManager {
     private final AbilityManager abilityManager;
     private final Map<UUID, Integer> currentPhaseIndex;
     private final Map<UUID, BukkitTask> phaseWatcherTasks;
+    /** The Entity object the runtime tasks of each tracked mob are bound to (#22). */
+    private final Map<UUID, LivingEntity> runtimeEntities = new HashMap<>();
+    /** Reached phase index, persisted on the entity so a reloaded mob does not repeat phases (#22). */
+    private final NamespacedKey phaseKey;
 
     public NexusMobManager(NexusMobsPlugin plugin) {
         this.plugin = plugin;
         this.activeNexusMobs = new HashMap<>();
         this.nexusMobKey = new NamespacedKey(plugin, "nexus_mob_type");
+        this.phaseKey = new NamespacedKey(plugin, "nexus_mob_phase");
         this.abilityManager = new AbilityManager(plugin);
         this.currentPhaseIndex = new HashMap<>();
         this.phaseWatcherTasks = new HashMap<>();
@@ -59,13 +65,27 @@ public class NexusMobManager {
         
         LivingEntity livingEntity = (LivingEntity) entity;
         
-        // Configure the Nexus mob
+        // Configure the Nexus mob (attributes, name, tag: persisted with the entity)
         configureNexusMob(livingEntity, type);
+
+        // Tracking, abilities, phases, model, particles, boss bar (not persisted)
+        NexusMob nexusMob = startRuntime(livingEntity, type, location);
         
-        // Create tracking object
+        plugin.getLogger().info("Spawned Nexus mob: " + type.getId() + " at " + 
+            location.getBlockX() + ", " + location.getBlockY() + ", " + location.getBlockZ());
+        
+        return nexusMob;
+    }
+
+    /**
+     * Start everything about a Nexus mob that lives only in memory and is bound to this
+     * Entity object: tracking, ability tasks, phase watcher, model, particles, boss bar.
+     */
+    private NexusMob startRuntime(LivingEntity livingEntity, NexusMobType type, Location location) {
         NexusMob nexusMob = new NexusMob(livingEntity.getUniqueId(), type.getId(), location);
         activeNexusMobs.put(livingEntity.getUniqueId(), nexusMob);
-        
+        runtimeEntities.put(livingEntity.getUniqueId(), livingEntity);
+
         // Start ability tasks for this mob
         abilityManager.startAbilities(livingEntity, type);
 
@@ -73,27 +93,62 @@ public class NexusMobManager {
         if (type.getPhases() != null && !type.getPhases().isEmpty()) {
             startPhaseWatcher(livingEntity, type);
         }
-        
+
         // Apply custom model if configured
         String modelId = plugin.getConfig().getString("elite-mobs." + type.getId() + ".model");
         if (modelId != null && plugin.getModelManager().hasModel(modelId)) {
             plugin.getModelManager().applyModel(livingEntity, modelId);
         }
-        
+
         // Start ambient particles
         String particleType = plugin.getConfig().getString("elite-mobs." + type.getId() + ".ambient-particles", "flame");
         plugin.getEffectsManager().startAmbientParticles(livingEntity, particleType);
-        
+
         // Create boss bar
         if (plugin.getConfig().getBoolean("elite-mobs." + type.getId() + ".boss-bar", true)) {
             BarColor barColor = getBarColor(type.getId());
             plugin.getEffectsManager().createBossBar(livingEntity, type.getDisplayName(), barColor);
         }
-        
-        plugin.getLogger().info("Spawned Nexus mob: " + type.getId() + " at " + 
-            location.getBlockX() + ", " + location.getBlockY() + ", " + location.getBlockZ());
-        
         return nexusMob;
+    }
+
+    /**
+     * Re-attach the runtime of an already configured Nexus mob, e.g. when its chunk is loaded
+     * again or after a server restart (#22). The Entity object of a mob changes on every chunk
+     * load, so the tasks bound to the old object are replaced. No-op for other entities, for
+     * dead ones, and if the runtime already runs for this exact object.
+     */
+    public void reattach(Entity entity) {
+        if (!(entity instanceof LivingEntity) || !isNexusMob(entity) || !entity.isValid() || entity.isDead()) {
+            return;
+        }
+        LivingEntity livingEntity = (LivingEntity) entity;
+        UUID id = livingEntity.getUniqueId();
+        if (runtimeEntities.get(id) == livingEntity) {
+            return;
+        }
+
+        String typeId = getNexusMobTypeId(livingEntity);
+        NexusMobType type = plugin.getConfigManager().getNexusMobType(typeId);
+        if (type == null) {
+            plugin.getLogger().warning("Nexus mob " + id + " has unknown type '" + typeId
+                    + "' (removed from config?); leaving it without abilities");
+            return;
+        }
+
+        removeNexusMob(id); // tasks still bound to a stale Entity object, if any
+        startRuntime(livingEntity, type, livingEntity.getLocation());
+    }
+
+    /**
+     * Re-attach all Nexus mobs that are currently loaded (plugin enable after a restart).
+     */
+    public void reattachLoadedMobs() {
+        for (World world : Bukkit.getWorlds()) {
+            for (LivingEntity entity : world.getLivingEntities()) {
+                reattach(entity);
+            }
+        }
     }
 
     /**
@@ -105,7 +160,8 @@ public class NexusMobManager {
      */
     private void startPhaseWatcher(LivingEntity entity, NexusMobType type) {
         UUID id = entity.getUniqueId();
-        currentPhaseIndex.put(id, -1);
+        Integer reachedPhase = entity.getPersistentDataContainer().get(phaseKey, PersistentDataType.INTEGER);
+        currentPhaseIndex.put(id, reachedPhase == null ? -1 : reachedPhase);
 
         BukkitTask task = new BukkitRunnable() {
             @Override
@@ -125,6 +181,7 @@ public class NexusMobManager {
                 if (targetIndex != currentIndex) {
                     // Mark applied first: if an effect below throws, the phase is not re-applied every run
                     currentPhaseIndex.put(id, targetIndex);
+                    entity.getPersistentDataContainer().set(phaseKey, PersistentDataType.INTEGER, targetIndex);
 
                     // Apply phase changes
                     Phase phase = phases.get(targetIndex);
@@ -308,6 +365,7 @@ public class NexusMobManager {
             abilityManager.stopAbilities(uuid);
             plugin.getModelManager().removeModel(uuid);
             plugin.getEffectsManager().removeBossBar(uuid);
+            runtimeEntities.remove(uuid);
             BukkitTask watcherTask = phaseWatcherTasks.remove(uuid);
             if (watcherTask != null && !watcherTask.isCancelled()) {
                 watcherTask.cancel();
@@ -392,6 +450,7 @@ public class NexusMobManager {
         }
 
         activeNexusMobs.clear();
+        runtimeEntities.clear();
     }
 }
 
