@@ -126,7 +126,7 @@ public class AbilityManager {
                 double offsetZ = (random.nextDouble() - 0.5) * 6;
                 Location spawnLoc = loc.clone().add(offsetX, 0, offsetZ);
                 
-                Entity minion = loc.getWorld().spawnEntity(spawnLoc, minionType);
+                loc.getWorld().spawnEntity(spawnLoc, minionType);
                 
                 // Visual effect
                 spawnLoc.getWorld().spawnParticle(

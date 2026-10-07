@@ -1,6 +1,5 @@
 package com.nexusmobs.loot;
 
-import com.nexusmobs.NexusMobsPlugin;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.*;
@@ -9,7 +8,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -26,11 +24,9 @@ import java.util.List;
  */
 public class ItemAbilityListener implements Listener {
     
-    private final NexusMobsPlugin plugin;
     private final CustomItemManager itemManager;
     
-    public ItemAbilityListener(NexusMobsPlugin plugin, CustomItemManager itemManager) {
-        this.plugin = plugin;
+    public ItemAbilityListener(CustomItemManager itemManager) {
         this.itemManager = itemManager;
     }
     
@@ -77,7 +73,7 @@ public class ItemAbilityListener implements Listener {
                     handleLifesteal(player, finalDamage, ability);
                     break;
                 case LIGHTNING_STRIKE:
-                    handleLightningStrike(victim, ability);
+                    handleLightningStrike(victim);
                     break;
                 case FIRE_ASPECT_AOE:
                     handleFireAoe(victim, ability);
@@ -97,6 +93,8 @@ public class ItemAbilityListener implements Listener {
                 case CRITICAL_BOOST:
                     handleCriticalBoost(event, ability);
                     break;
+                default:
+                    break; // not an on-hit ability
             }
         }
     }
@@ -118,16 +116,18 @@ public class ItemAbilityListener implements Listener {
                 
                 switch (ability.getType()) {
                     case THORNS_AOE:
-                        handleThornsAoe(player, event.getDamager(), ability);
+                        handleThornsAoe(player, ability);
                         break;
                     case DAMAGE_RESISTANCE:
                         handleDamageResistance(event, ability);
                         break;
                     case REFLECT_PROJECTILES:
                         if (event.getDamager() instanceof Projectile) {
-                            handleReflectProjectile(player, (Projectile) event.getDamager(), ability);
+                            handleReflectProjectile(player, (Projectile) event.getDamager());
                         }
                         break;
+                    default:
+                        break; // not an on-damaged ability
                 }
             }
         }
@@ -177,6 +177,8 @@ public class ItemAbilityListener implements Listener {
                 case INVISIBILITY_ACTIVE:
                     success = handleInvisibility(player, ability);
                     break;
+                default:
+                    break; // unreachable: filtered by isActiveAbility()
             }
             
             if (success) {
@@ -209,7 +211,7 @@ public class ItemAbilityListener implements Listener {
                 5, 0.3, 0.3, 0.3, 0);
     }
     
-    private void handleLightningStrike(LivingEntity victim, ItemAbility ability) {
+    private void handleLightningStrike(LivingEntity victim) {
         victim.getWorld().strikeLightning(victim.getLocation());
     }
     
@@ -275,7 +277,7 @@ public class ItemAbilityListener implements Listener {
         }
     }
     
-    private void handleThornsAoe(Player player, Entity attacker, ItemAbility ability) {
+    private void handleThornsAoe(Player player, ItemAbility ability) {
         Location loc = player.getLocation();
         Collection<Entity> nearby = loc.getWorld().getNearbyEntities(loc, 3, 3, 3);
         
@@ -294,7 +296,7 @@ public class ItemAbilityListener implements Listener {
         event.setDamage(event.getDamage() * reduction);
     }
     
-    private void handleReflectProjectile(Player player, Projectile projectile, ItemAbility ability) {
+    private void handleReflectProjectile(Player player, Projectile projectile) {
         if (projectile.getShooter() instanceof LivingEntity) {
             LivingEntity shooter = (LivingEntity) projectile.getShooter();
             

@@ -336,13 +336,12 @@ public class NexusMobsCommand implements CommandExecutor, TabCompleter {
         
         int rank = 1;
         for (PlayerStats stats : topPlayers) {
-            String prefix;
-            switch (rank) {
-                case 1: prefix = ChatColor.GOLD + "§l#1 "; break;
-                case 2: prefix = ChatColor.WHITE + "§l#2 "; break;
-                case 3: prefix = ChatColor.RED + "§l#3 "; break;
-                default: prefix = ChatColor.GRAY + "#" + rank + " "; break;
-            }
+            String prefix = switch (rank) {
+                case 1 -> ChatColor.GOLD + "§l#1 ";
+                case 2 -> ChatColor.WHITE + "§l#2 ";
+                case 3 -> ChatColor.RED + "§l#3 ";
+                default -> ChatColor.GRAY + "#" + rank + " ";
+            };
             
             sender.sendMessage(prefix + ChatColor.YELLOW + stats.getPlayerName() + 
                     ChatColor.GRAY + " - " + ChatColor.WHITE + stats.getTotalKills() + " kills");

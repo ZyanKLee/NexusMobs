@@ -1,7 +1,6 @@
 package com.nexusmobs.gui;
 
 import com.nexusmobs.NexusMobsPlugin;
-import com.nexusmobs.leaderboard.LeaderboardManager;
 import com.nexusmobs.leaderboard.PlayerStats;
 import com.nexusmobs.models.NexusMobType;
 import org.bukkit.Bukkit;
@@ -139,13 +138,12 @@ public class GuiManager {
             ItemStack skull = new ItemStack(Material.PLAYER_HEAD);
             SkullMeta meta = (SkullMeta) skull.getItemMeta();
             
-            String prefix;
-            switch (rank) {
-                case 1: prefix = "§6§l#1 "; break;
-                case 2: prefix = "§f§l#2 "; break;
-                case 3: prefix = "§c§l#3 "; break;
-                default: prefix = "§7#" + rank + " "; break;
-            }
+            String prefix = switch (rank) {
+                case 1 -> "§6§l#1 ";
+                case 2 -> "§f§l#2 ";
+                case 3 -> "§c§l#3 ";
+                default -> "§7#" + rank + " ";
+            };
             
             meta.setDisplayName(prefix + "§e" + stats.getPlayerName());
             

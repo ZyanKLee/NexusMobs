@@ -11,7 +11,7 @@ on:
 
 jobs:
   build:
-    name: Build and Analyze
+    name: Build, Test and Analyze
     runs-on: ubuntu-latest
 
     steps:
@@ -25,19 +25,40 @@ jobs:
           java-version: '21'
           cache: maven
 
-      - name: Compile
-        run: mvn --batch-mode compile -DskipTests
+      - name: Compile and run tests
+        run: mvn --batch-mode test
 
-      - name: Checkstyle (report only)
-        run: mvn --batch-mode checkstyle:check -DfailOnViolation=false
-        continue-on-error: true
+      # MockBukkit turns UnimplementedOperationException into a *skipped* test.
+      # A skipped test verifies nothing, so treat it as a failure.
+      - name: Fail on skipped tests
+        if: ${{ !cancelled() }}
+        run: |
+          skipped=$(grep -l '<testsuite [^>]*skipped="[1-9]' target/surefire-reports/TEST-*.xml || true)
+          if [ -n "$skipped" ]; then
+            echo "::error::Skipped tests found in: $skipped"
+            exit 1
+          fi
 
-      - name: SpotBugs (hard-fail on HIGH findings)
+      # Each analysis step runs even if a previous one failed, so all reports are produced.
+      - name: Checkstyle (fails on any violation)
+        if: ${{ !cancelled() }}
+        run: mvn --batch-mode checkstyle:check
+
+      - name: SpotBugs (fails on HIGH findings)
+        if: ${{ !cancelled() }}
         run: mvn --batch-mode spotbugs:check
 
-      - name: PMD (report only)
-        run: mvn --batch-mode pmd:check -DfailOnViolation=false
-        continue-on-error: true
+      - name: PMD (fails on violations and processing errors)
+        if: ${{ !cancelled() }}
+        run: mvn --batch-mode pmd:check
+
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: target/surefire-reports/
+          if-no-files-found: ignore
 
       - name: Upload SpotBugs report
         if: always()

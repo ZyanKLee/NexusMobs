@@ -35,14 +35,14 @@ public class ConfigManager {
     private void loadNexusMobTypes() {
         nexusMobTypes.clear();
 
-        ConfigurationSection NexusMobsSection = plugin.getConfig().getConfigurationSection("elite-mobs");
-        if (NexusMobsSection == null) {
+        ConfigurationSection mobsSection = plugin.getConfig().getConfigurationSection("elite-mobs");
+        if (mobsSection == null) {
             plugin.getLogger().warning("No Nexus mob types configured!");
             return;
         }
 
-        for (String key : NexusMobsSection.getKeys(false)) {
-            ConfigurationSection mobSection = NexusMobsSection.getConfigurationSection(key);
+        for (String key : mobsSection.getKeys(false)) {
+            ConfigurationSection mobSection = mobsSection.getConfigurationSection(key);
             if (mobSection == null) continue;
 
             try {
@@ -209,9 +209,9 @@ public class ConfigManager {
                 }
 
                 if (thresholdHp >= 0) {
-                    phases.add(new com.nexusmobs.models.Phase(thresholdHp, true, attackMult, armorBonus, phaseEffects));
+                    phases.add(new Phase(thresholdHp, true, attackMult, armorBonus, phaseEffects));
                 } else {
-                    phases.add(new com.nexusmobs.models.Phase(threshold, attackMult, armorBonus, phaseEffects));
+                    phases.add(new Phase(threshold, attackMult, armorBonus, phaseEffects));
                 }
             }
         }

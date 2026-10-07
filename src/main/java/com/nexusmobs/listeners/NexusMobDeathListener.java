@@ -1,15 +1,11 @@
 package com.nexusmobs.listeners;
 
 import com.nexusmobs.NexusMobsPlugin;
-import com.nexusmobs.config.ConfigManager;
-import com.nexusmobs.models.NexusMob;
 import com.nexusmobs.models.NexusMobType;
 import com.nexusmobs.models.LootDrop;
 import com.nexusmobs.loot.CustomItem;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;

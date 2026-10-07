@@ -7,7 +7,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.Vector;
 
 /**
  * Manages visual and sound effects for elite mobs
@@ -124,6 +123,8 @@ public class EffectsManager {
             case "knockback":
                 playKnockbackEffect(location);
                 break;
+            default:
+                break; // no visual for other abilities
         }
     }
     
