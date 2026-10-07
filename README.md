@@ -102,6 +102,12 @@ Advanced custom mobs system with models, abilities, custom loot and multi-langua
 
 ---
 
+## 🤖 Development
+
+This project is developed with the help of AI coding assistants, though not exclusively.
+
+---
+
 ## 📜 License
 
 MIT License - Free to use and modify
