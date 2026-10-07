@@ -117,21 +117,15 @@ public class NexusMobManager {
                     return;
                 }
 
-                double maxHealth = type.getMaxHealth();
-                double currentHealth = entity.getHealth();
-
                 List<Phase> phases = type.getPhases();
                 if (phases == null || phases.isEmpty()) return;
 
-                // Simplified behavior: only a single "Next" phase will activate when mob reaches half HP
-                int targetIndex = -1;
-                double halfHp = Math.max(1.0, maxHealth) * 0.5;
-                if (currentHealth <= halfHp) {
-                    targetIndex = phases.size() - 1; // apply the last configured phase as the "next" phase
-                }
-
                 int currentIndex = currentPhaseIndex.getOrDefault(id, -1);
-                if (targetIndex != -1 && targetIndex != currentIndex) {
+                int targetIndex = nextPhaseIndex(phases, currentIndex, entity.getHealth(), type.getMaxHealth());
+                if (targetIndex != currentIndex) {
+                    // Mark applied first: if an effect below throws, the phase is not re-applied every run
+                    currentPhaseIndex.put(id, targetIndex);
+
                     // Apply phase changes
                     Phase phase = phases.get(targetIndex);
 
@@ -197,8 +191,6 @@ public class NexusMobManager {
                         entity.setGlowing(true);
                     }
 
-                    // Mark applied
-                    currentPhaseIndex.put(id, targetIndex);
                     plugin.getLogger().info("Applied phase " + targetIndex + " for mob " + type.getId() + " (" + id + ")");
                 }
             }
@@ -207,6 +199,23 @@ public class NexusMobManager {
         phaseWatcherTasks.put(id, task);
     }
     
+    /**
+     * The phase that should be active: the deepest phase (phases are ordered from the highest
+     * to the lowest threshold) whose threshold has been reached. Phases never go back, so healing
+     * does not undo a phase (#4).
+     *
+     * @return the new phase index, or {@code currentIndex} if no further phase was reached
+     */
+    static int nextPhaseIndex(List<Phase> phases, int currentIndex, double health, double maxHealth) {
+        int target = currentIndex;
+        for (int i = currentIndex + 1; i < phases.size(); i++) {
+            if (phases.get(i).isReachedAt(health, maxHealth)) {
+                target = i;
+            }
+        }
+        return target;
+    }
+
     /**
      * Configure a living entity as an elite mob
      */

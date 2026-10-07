@@ -4,6 +4,7 @@ import com.nexusmobs.NexusMobsPlugin;
 import com.nexusmobs.models.NexusMob;
 import com.nexusmobs.models.NexusMobType;
 import com.nexusmobs.models.Phase;
+import com.nexusmobs.testutil.EffectlessWorldMock;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.EntityType;
@@ -15,7 +16,6 @@ import org.junit.jupiter.api.Test;
 import org.mockbukkit.mockbukkit.MockBukkit;
 import org.mockbukkit.mockbukkit.ServerMock;
 import org.mockbukkit.mockbukkit.entity.LivingEntityMock;
-import org.mockbukkit.mockbukkit.exception.UnimplementedOperationException;
 import org.mockbukkit.mockbukkit.world.WorldMock;
 
 import java.lang.reflect.Field;
@@ -48,7 +48,7 @@ class PhaseWatcherLifecycleTest {
     @BeforeEach
     void setUp() {
         server = MockBukkit.mock();
-        world = server.addSimpleWorld("world");
+        world = EffectlessWorldMock.addTo(server, "world");
         plugin = MockBukkit.load(NexusMobsPlugin.class);
         manager = plugin.getNexusMobManager();
     }
@@ -100,11 +100,7 @@ class PhaseWatcherLifecycleTest {
     void phaseIsAppliedAtHalfHealth() throws Exception {
         LivingEntity entity = spawnTrackedMobWithWatcher();
         entity.setHealth(40.0);
-        try {
-            server.getScheduler().performTicks(WATCHER_PERIOD + 1);
-        } catch (UnimplementedOperationException ignored) {
-            // WorldMock.spawnParticle is unimplemented; attributes are applied before that call
-        }
+        server.getScheduler().performTicks(WATCHER_PERIOD + 1);
 
         assertEquals(5.0 * 1.25, entity.getAttribute(Attribute.ATTACK_DAMAGE).getBaseValue(), 1e-9);
         assertEquals(2.0, entity.getAttribute(Attribute.ARMOR).getBaseValue(), 1e-9);

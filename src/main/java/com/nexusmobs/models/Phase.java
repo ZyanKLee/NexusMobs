@@ -31,6 +31,26 @@ public class Phase {
         this.potionEffects = potionEffects;
     }
 
+    /**
+     * Whether this phase's threshold has been reached.
+     *
+     * @param health    the mob's current health
+     * @param maxHealth the mob type's configured max health (base for percentage thresholds)
+     */
+    public boolean isReachedAt(double health, double maxHealth) {
+        if (usesAbsoluteHp()) {
+            return health <= thresholdHp;
+        }
+        return health / Math.max(1.0, maxHealth) * 100.0 <= thresholdPercent;
+    }
+
+    /**
+     * The threshold as a percentage of {@code maxHealth}, for ordering phases.
+     */
+    public double thresholdPercentOf(double maxHealth) {
+        return usesAbsoluteHp() ? thresholdHp / Math.max(1.0, maxHealth) * 100.0 : thresholdPercent;
+    }
+
     public boolean usesAbsoluteHp() {
         return thresholdHp >= 0;
     }
