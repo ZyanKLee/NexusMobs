@@ -2,9 +2,8 @@ package com.nexusmobs.abilities;
 
 import com.nexusmobs.NexusMobsPlugin;
 import com.nexusmobs.models.NexusMobType;
+import com.nexusmobs.util.PotionEffects;
 import org.bukkit.Location;
-import org.bukkit.NamespacedKey;
-import org.bukkit.Registry;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.*;
 import org.bukkit.potion.PotionEffect;
@@ -232,29 +231,9 @@ public class AbilityManager {
         LivingEntity livingVictim = (LivingEntity) victim;
         
         for (String effectName : effects) {
-            PotionEffectType effectType = getPotionEffectType(effectName);
+            PotionEffectType effectType = PotionEffects.resolve(effectName);
             if (effectType != null) {
                 livingVictim.addPotionEffect(new PotionEffect(effectType, duration, 0));
-            }
-        }
-    }
-    
-    /**
-     * Get PotionEffectType by name (compatible with Paper 1.21+)
-     */
-    private PotionEffectType getPotionEffectType(String name) {
-        if (name == null) return null;
-        
-        // Try to get from Registry (Paper 1.21+)
-        try {
-            NamespacedKey key = NamespacedKey.minecraft(name.toLowerCase());
-            return Registry.POTION_EFFECT_TYPE.get(key);
-        } catch (Exception e) {
-            // Fallback for older API
-            try {
-                return PotionEffectType.getByName(name);
-            } catch (Exception e2) {
-                return null;
             }
         }
     }
