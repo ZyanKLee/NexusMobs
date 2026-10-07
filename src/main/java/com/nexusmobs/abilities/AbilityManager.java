@@ -2,7 +2,6 @@ package com.nexusmobs.abilities;
 
 import com.nexusmobs.NexusMobsPlugin;
 import com.nexusmobs.models.NexusMobType;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
@@ -10,6 +9,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.*;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
@@ -67,28 +67,31 @@ public class AbilityManager {
         double radius = config.getDouble("radius", 5.0);
         int interval = config.getInt("interval-ticks", 100);
         
-        return Bukkit.getScheduler().runTaskTimer(plugin, () -> {
-            if (!entity.isValid() || entity.isDead()) {
-                return;
-            }
-            
-            Location loc = entity.getLocation();
-            Collection<Entity> nearby = loc.getWorld().getNearbyEntities(loc, radius, radius, radius);
-            
-            for (Entity nearbyEntity : nearby) {
-                if (nearbyEntity instanceof Player && nearbyEntity != entity) {
-                    Player player = (Player) nearbyEntity;
-                    player.damage(damage, entity);
-                    
-                    // Visual effect
-                    player.getWorld().spawnParticle(
-                        org.bukkit.Particle.SMOKE,
-                        player.getLocation().add(0, 1, 0),
-                        20, 0.5, 0.5, 0.5, 0.05
-                    );
+        return new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (stopIfGone(this, entity)) {
+                    return;
+                }
+
+                Location loc = entity.getLocation();
+                Collection<Entity> nearby = loc.getWorld().getNearbyEntities(loc, radius, radius, radius);
+
+                for (Entity nearbyEntity : nearby) {
+                    if (nearbyEntity instanceof Player && nearbyEntity != entity) {
+                        Player player = (Player) nearbyEntity;
+                        player.damage(damage, entity);
+
+                        // Visual effect
+                        player.getWorld().spawnParticle(
+                            org.bukkit.Particle.SMOKE,
+                            player.getLocation().add(0, 1, 0),
+                            20, 0.5, 0.5, 0.5, 0.05
+                        );
+                    }
                 }
             }
-        }, interval, interval);
+        }.runTaskTimer(plugin, interval, interval);
     }
     
     /**
@@ -108,36 +111,60 @@ public class AbilityManager {
             return null;
         }
         
-        return Bukkit.getScheduler().runTaskTimer(plugin, () -> {
-            if (!entity.isValid() || entity.isDead()) {
-                return;
+        return new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (stopIfGone(this, entity)) {
+                    return;
+                }
+
+                // Check chance
+                if (Math.random() > chance) {
+                    return;
+                }
+
+                Location loc = entity.getLocation();
+
+                for (int i = 0; i < count; i++) {
+                    // Spawn minion nearby
+                    double offsetX = (random.nextDouble() - 0.5) * 6;
+                    double offsetZ = (random.nextDouble() - 0.5) * 6;
+                    Location spawnLoc = loc.clone().add(offsetX, 0, offsetZ);
+
+                    loc.getWorld().spawnEntity(spawnLoc, minionType);
+
+                    // Visual effect
+                    spawnLoc.getWorld().spawnParticle(
+                        org.bukkit.Particle.PORTAL,
+                        spawnLoc.add(0, 1, 0),
+                        30, 0.5, 0.5, 0.5, 0.1
+                    );
+                }
             }
-            
-            // Check chance
-            if (Math.random() > chance) {
-                return;
-            }
-            
-            Location loc = entity.getLocation();
-            
-            for (int i = 0; i < count; i++) {
-                // Spawn minion nearby
-                double offsetX = (random.nextDouble() - 0.5) * 6;
-                double offsetZ = (random.nextDouble() - 0.5) * 6;
-                Location spawnLoc = loc.clone().add(offsetX, 0, offsetZ);
-                
-                loc.getWorld().spawnEntity(spawnLoc, minionType);
-                
-                // Visual effect
-                spawnLoc.getWorld().spawnParticle(
-                    org.bukkit.Particle.PORTAL,
-                    spawnLoc.add(0, 1, 0),
-                    30, 0.5, 0.5, 0.5, 0.1
-                );
-            }
-        }, interval, interval);
+        }.runTaskTimer(plugin, interval, interval);
     }
     
+    /**
+     * Cancel a periodic ability task once its entity is gone (dead, removed, chunk unloaded),
+     * so it does not keep running when nobody calls stopAbilities() (#21).
+     *
+     * @return true if the task was cancelled
+     */
+    private boolean stopIfGone(BukkitRunnable task, LivingEntity entity) {
+        if (entity.isValid() && !entity.isDead()) {
+            return false;
+        }
+        task.cancel();
+        List<BukkitTask> tasks = abilityTasks.get(entity.getUniqueId());
+        if (tasks != null) {
+            tasks.removeIf(t -> t.getTaskId() == task.getTaskId());
+            if (tasks.isEmpty()) {
+                abilityTasks.remove(entity.getUniqueId());
+            }
+        }
+        return true;
+    }
+
     /**
      * Handle knockback ability (called from damage listener)
      */
