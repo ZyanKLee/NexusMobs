@@ -1,16 +1,23 @@
 package com.nexusmobs;
 
+import com.nexusmobs.models.LootDrop;
 import com.nexusmobs.models.NexusMobType;
 import com.nexusmobs.models.Phase;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.junit.jupiter.api.Test;
 import org.mockbukkit.mockbukkit.MockBukkit;
 
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -25,6 +32,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * Smoke test: the plugin enables with the bundled default configuration.
  */
 class PluginLoadTest {
+
+    /** Abilities used in config_items.yml that ItemAbilityType does not implement yet (#31). */
+    private static final Set<String> UNIMPLEMENTED_ABILITIES = Set.of(
+            "EXPLOSION_ARROW", "ICE_BLAST", "SLOWNESS_AOE", "LUCKY_MINING", "INVISIBILITY_SNEAK",
+            "FIRE_IMMUNITY", "FIRE_THORNS", "FIRE_TRAIL", "ICE_ASPECT", "FREEZE_AURA", "ICE_PATH",
+            "STRENGTH_BOOST", "RESURRECT");
 
     private NexusMobsPlugin plugin;
     private final List<String> warnings = new ArrayList<>();
@@ -115,6 +128,45 @@ class PluginLoadTest {
     void bundledConfigHasNoUnknownPotionEffects() {
         List<String> unknown = warnings.stream().filter(w -> w.startsWith("Unknown potion effect type")).toList();
         assertEquals(List.of(), unknown);
+    }
+
+    // #28: config_items.yml was never read; boss drops naming custom items were rejected as materials
+    @Test
+    void allItemsFromConfigItemsYmlAreLoaded() throws Exception {
+        YamlConfiguration bundled = new YamlConfiguration();
+        try (Reader reader = new InputStreamReader(
+                getClass().getResourceAsStream("/config_items.yml"), StandardCharsets.UTF_8)) {
+            bundled.load(reader);
+        }
+        Set<String> expected = bundled.getConfigurationSection("custom-items").getKeys(false);
+
+        assertEquals(new TreeSet<>(expected), new TreeSet<>(plugin.getCustomItemManager().getCustomItems().keySet()));
+    }
+
+    @Test
+    void bossDropsReferenceLoadedCustomItems() {
+        NexusMobType ashTitan = plugin.getConfigManager().getNexusMobType("AshTitan");
+        List<String> customDrops = ashTitan.getDrops().stream()
+                .filter(LootDrop::isCustomItem).map(LootDrop::getCustomItemId).toList();
+        assertEquals(List.of("ASH_PLATE", "ASH_PLATE"), customDrops);
+
+        Set<String> items = plugin.getCustomItemManager().getCustomItems().keySet();
+        for (NexusMobType type : plugin.getConfigManager().getNexusMobTypes().values()) {
+            for (LootDrop drop : type.getDrops()) {
+                assertTrue(!drop.isCustomItem() || items.contains(drop.getCustomItemId()),
+                        type.getId() + " drops unknown custom item " + drop.getCustomItemId());
+            }
+        }
+    }
+
+    @Test
+    void bundledConfigLoadsWithoutWarnings() {
+        // unimplemented item abilities are tracked in #31 (see UNIMPLEMENTED_ABILITIES)
+        List<String> unexpected = warnings.stream()
+                .filter(w -> !w.startsWith("Unknown ability type: ")
+                        || !UNIMPLEMENTED_ABILITIES.contains(w.substring("Unknown ability type: ".length())))
+                .toList();
+        assertEquals(List.of(), unexpected);
     }
 
     private void assertHasEffect(String mobId, PotionEffectType expected) {

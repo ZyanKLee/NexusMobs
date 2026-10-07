@@ -2,8 +2,7 @@ package com.nexusmobs.listeners;
 
 import com.nexusmobs.NexusMobsPlugin;
 import com.nexusmobs.models.NexusMobType;
-import com.nexusmobs.models.LootDrop;
-import com.nexusmobs.loot.CustomItem;
+import com.nexusmobs.loot.LootGenerator;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -22,10 +21,12 @@ public class NexusMobDeathListener implements Listener {
     
     private final NexusMobsPlugin plugin;
     private final Random random;
+    private final LootGenerator lootGenerator;
     
     public NexusMobDeathListener(NexusMobsPlugin plugin) {
         this.plugin = plugin;
         this.random = new Random();
+        this.lootGenerator = new LootGenerator(plugin, random);
     }
     
     @EventHandler(priority = EventPriority.NORMAL)
@@ -67,7 +68,7 @@ public class NexusMobDeathListener implements Listener {
         event.setDroppedExp(0);
         
         // Add custom loot
-        List<ItemStack> customLoot = generateLoot(type);
+        List<ItemStack> customLoot = lootGenerator.generate(type);
         event.getDrops().addAll(customLoot);
         
         // Add bonus experience based on mob health
@@ -79,46 +80,6 @@ public class NexusMobDeathListener implements Listener {
         
         plugin.getLogger().info("Elite mob defeated: " + type.getId() + 
                 (killer != null ? " by " + killer.getName() : ""));
-    }
-    
-    /**
-     * Generate loot drops for an elite mob
-     */
-    private List<ItemStack> generateLoot(NexusMobType type) {
-        List<ItemStack> loot = new ArrayList<>();
-        
-        // Regular drops
-        for (LootDrop drop : type.getDrops()) {
-            // Check chance
-            if (random.nextDouble() > drop.getChance()) {
-                continue;
-            }
-            
-            // Calculate amount
-            int amount = drop.getMinAmount();
-            if (drop.getMaxAmount() > drop.getMinAmount()) {
-                amount += random.nextInt(drop.getMaxAmount() - drop.getMinAmount() + 1);
-            }
-            
-            // Create item stack
-            ItemStack item = new ItemStack(drop.getMaterial(), amount);
-            loot.add(item);
-        }
-        
-        // Custom item drops
-        for (Map.Entry<String, CustomItem> entry : plugin.getCustomItemManager().getCustomItems().entrySet()) {
-            CustomItem customItem = entry.getValue();
-            
-            if (random.nextDouble() <= customItem.getDropChance()) {
-                ItemStack item = plugin.getCustomItemManager().createItemStack(entry.getKey());
-                if (item != null) {
-                    loot.add(item);
-                    plugin.getLogger().info("Custom item dropped: " + entry.getKey());
-                }
-            }
-        }
-        
-        return loot;
     }
     
     /**

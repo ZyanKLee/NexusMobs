@@ -152,11 +152,17 @@ public class ConfigManager {
                 int max = maxObj instanceof Number ? ((Number) maxObj).intValue() : 1;
                 double chance = chanceObj instanceof Number ? ((Number) chanceObj).doubleValue() : 1.0;
 
-                try {
-                    Material material = Material.valueOf(typeStr.toUpperCase(Locale.ROOT));
+                if (typeStr == null || typeStr.isBlank()) {
+                    plugin.getLogger().warning("Drop without type in mob " + id);
+                    continue;
+                }
+                Material material = Material.matchMaterial(typeStr);
+                if (material != null) {
                     drops.add(new LootDrop(material, min, max, chance));
-                } catch (IllegalArgumentException e) {
-                    plugin.getLogger().warning("Invalid material type in drops: " + typeStr);
+                } else {
+                    // Not a vanilla material: treat it as a custom item id (#28).
+                    // Checked against the loaded custom items in validateCustomItemDrops().
+                    drops.add(LootDrop.customItem(typeStr, min, max, chance));
                 }
             }
         }
@@ -234,6 +240,37 @@ public class ConfigManager {
             abilitiesSection,
             phases
         );
+    }
+
+    /**
+     * Warn about custom item drops whose id is neither a material nor a loaded custom item.
+     * Must run after the custom items are loaded.
+     */
+    public void validateCustomItemDrops(Set<String> customItemIds) {
+        for (NexusMobType type : nexusMobTypes.values()) {
+            for (LootDrop drop : type.getDrops()) {
+                if (drop.isCustomItem() && !customItemIds.contains(drop.getCustomItemId())) {
+                    plugin.getLogger().warning("Unknown drop '" + drop.getCustomItemId() + "' in mob " + type.getId()
+                            + ": neither a material nor a custom item");
+                }
+            }
+        }
+    }
+
+    /**
+     * Custom item ids that appear in some mob's drops. These only drop from those mobs
+     * and are excluded from the global custom item roll.
+     */
+    public Set<String> getMobExclusiveCustomItems() {
+        Set<String> ids = new HashSet<>();
+        for (NexusMobType type : nexusMobTypes.values()) {
+            for (LootDrop drop : type.getDrops()) {
+                if (drop.isCustomItem()) {
+                    ids.add(drop.getCustomItemId());
+                }
+            }
+        }
+        return ids;
     }
 
     /**

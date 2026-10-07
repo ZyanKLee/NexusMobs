@@ -60,6 +60,7 @@ public class NexusMobsPlugin extends JavaPlugin {
         
         // Initialize managers (order matters!)
         customItemManager = new CustomItemManager(this);
+        configManager.validateCustomItemDrops(customItemManager.getCustomItems().keySet());
         modelManager = new ModelManager(this);
         leaderboardManager = new LeaderboardManager(this);
         effectsManager = new EffectsManager(this);
@@ -170,6 +171,7 @@ public class NexusMobsPlugin extends JavaPlugin {
         
         // Reload managers
         customItemManager.reload();
+        configManager.validateCustomItemDrops(customItemManager.getCustomItems().keySet());
         modelManager.reload();
         
         // Refresh active mobs (update names/bossbars) instead of full cleanup to preserve entities
