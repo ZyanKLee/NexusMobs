@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
+import java.util.logging.Level;
 
 /**
  * Handles spawning of elite mobs at configured intervals
@@ -25,6 +26,7 @@ public class NexusMobspawner {
     private File dataFile;
     private FileConfiguration dataCfg;
     private long lastSpawnTimestamp = 0L;
+    private boolean searchInProgress;
     
     public NexusMobspawner(NexusMobsPlugin plugin) {
         this.plugin = plugin;
@@ -97,13 +99,67 @@ public class NexusMobspawner {
             return;
         }
         
-        // Try to find a valid spawn location
-        Location spawnLocation = findSpawnLocation(players);
-        if (spawnLocation == null) {
+        if (searchInProgress) {
+            plugin.getLogger().info("Nexus mob spawn skipped: a spawn location search is still running");
+            return;
+        }
+
+        // Look for a location; chunks are loaded asynchronously, one candidate after another (#16)
+        searchInProgress = true;
+        tryNextCandidate(type, 0);
+    }
+
+    /**
+     * Pick a candidate column near a random player, load its chunk asynchronously and check it.
+     * Unsuitable columns move on to the next attempt until spawn.max-spawn-attempts is reached.
+     */
+    private void tryNextCandidate(NexusMobType type, int attempt) {
+        if (attempt >= plugin.getConfigManager().getMaxSpawnAttempts()) {
+            searchInProgress = false;
             plugin.getLogger().warning("Failed to find a valid spawn location for Nexus mob");
             return;
         }
-        
+
+        SpawnCandidate candidate = pickCandidate();
+        if (candidate == null) {
+            tryNextCandidate(type, attempt + 1);
+            return;
+        }
+
+        // Loading (or generating) a chunk 800-1200 blocks away blocks the main thread for a long
+        // time; Paper does it off-thread and completes the future on the main thread.
+        candidate.world.getChunkAtAsync(candidate.x >> 4, candidate.z >> 4, true)
+                .whenComplete((chunk, error) -> onMainThread(() -> {
+                    try {
+                        Location spawnLocation = error == null ? findSafeY(candidate.world, candidate.x, candidate.z) : null;
+                        if (spawnLocation == null) {
+                            tryNextCandidate(type, attempt + 1);
+                            return;
+                        }
+                        searchInProgress = false;
+                        spawnAt(type, spawnLocation);
+                    } catch (RuntimeException e) {
+                        searchInProgress = false;
+                        plugin.getLogger().log(Level.SEVERE, "Nexus mob spawn failed", e);
+                    }
+                }));
+    }
+
+    private void onMainThread(Runnable runnable) {
+        if (Bukkit.isPrimaryThread()) {
+            runnable.run();
+        } else {
+            Bukkit.getScheduler().runTask(plugin, runnable);
+        }
+    }
+
+    private void spawnAt(NexusMobType type, Location spawnLocation) {
+        // the search took a while: the limit may have been reached in the meantime
+        if (plugin.getNexusMobManager().getActiveNexusMobCount() >= plugin.getConfigManager().getMaxConcurrentElites()) {
+            plugin.getLogger().info("Nexus mob spawn cancelled: maximum concurrent mobs reached");
+            return;
+        }
+
         // Spawn the elite mob
         NexusMob nexusMob = plugin.getNexusMobManager().spawnNexusMob(type, spawnLocation);
         if (nexusMob == null) {
@@ -126,56 +182,43 @@ public class NexusMobspawner {
     }
     
     /**
-     * Find a valid spawn location far from players
+     * A random column 800-1200 blocks (spawn.min/max-distance) from a random online player in an
+     * allowed world, or null if the chosen player is not in an allowed world. Touches no chunk.
      */
-    private Location findSpawnLocation(Collection<? extends Player> players) {
-        List<String> allowedWorlds = plugin.getConfigManager().getAllowedWorlds();
+    private SpawnCandidate pickCandidate() {
+        List<? extends Player> players = new ArrayList<>(Bukkit.getOnlinePlayers());
+        if (players.isEmpty()) {
+            return null;
+        }
+        Player randomPlayer = players.get(random.nextInt(players.size()));
+        World world = randomPlayer.getWorld();
+        if (!plugin.getConfigManager().getAllowedWorlds().contains(world.getName())) {
+            return null;
+        }
+
         int minDistance = plugin.getConfigManager().getMinSpawnDistance();
         int maxDistance = plugin.getConfigManager().getMaxSpawnDistance();
-        int maxAttempts = plugin.getConfigManager().getMaxSpawnAttempts();
-        
-        for (int attempt = 0; attempt < maxAttempts; attempt++) {
-            // Choose a random online player as reference
-            Player randomPlayer = players.stream()
-                    .skip(random.nextInt(players.size()))
-                    .findFirst()
-                    .orElse(null);
-            
-            if (randomPlayer == null) continue;
-            
-            World world = randomPlayer.getWorld();
-            
-            // Check if world is allowed
-            if (!allowedWorlds.contains(world.getName())) {
-                continue;
-            }
-            
-            Location playerLoc = randomPlayer.getLocation();
-            
-            // Generate random polar coordinates
-            double angle = random.nextDouble() * 2 * Math.PI;
-            int distance = minDistance + random.nextInt(maxDistance - minDistance);
-            
-            int offsetX = (int) (Math.cos(angle) * distance);
-            int offsetZ = (int) (Math.sin(angle) * distance);
-            
-            int spawnX = playerLoc.getBlockX() + offsetX;
-            int spawnZ = playerLoc.getBlockZ() + offsetZ;
-            
-            // Load chunk if necessary
-            Chunk chunk = world.getChunkAt(spawnX >> 4, spawnZ >> 4);
-            if (!chunk.isLoaded()) {
-                chunk.load();
-            }
-            
-            // Find safe Y coordinate
-            Location spawnLoc = findSafeY(world, spawnX, spawnZ);
-            if (spawnLoc != null) {
-                return spawnLoc;
-            }
+        Location playerLoc = randomPlayer.getLocation();
+
+        // Generate random polar coordinates
+        double angle = random.nextDouble() * 2 * Math.PI;
+        int distance = minDistance + random.nextInt(maxDistance - minDistance);
+
+        int spawnX = playerLoc.getBlockX() + (int) (Math.cos(angle) * distance);
+        int spawnZ = playerLoc.getBlockZ() + (int) (Math.sin(angle) * distance);
+        return new SpawnCandidate(world, spawnX, spawnZ);
+    }
+
+    private static final class SpawnCandidate {
+        private final World world;
+        private final int x;
+        private final int z;
+
+        private SpawnCandidate(World world, int x, int z) {
+            this.world = world;
+            this.x = x;
+            this.z = z;
         }
-        
-        return null;
     }
     
     /**
