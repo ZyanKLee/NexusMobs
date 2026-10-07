@@ -307,6 +307,7 @@ public class NexusMobManager {
         if (removed != null) {
             abilityManager.stopAbilities(uuid);
             plugin.getModelManager().removeModel(uuid);
+            plugin.getEffectsManager().removeBossBar(uuid);
             BukkitTask watcherTask = phaseWatcherTasks.remove(uuid);
             if (watcherTask != null && !watcherTask.isCancelled()) {
                 watcherTask.cancel();
@@ -359,9 +360,11 @@ public class NexusMobManager {
                 NexusMobType type = plugin.getConfigManager().getNexusMobType(typeId);
                 if (type != null) {
                     le.setCustomName(type.getDisplayName());
-                    // refresh boss bar if present
+                    // refresh boss bar (updates the existing one, see #6), or drop it if it was disabled
                     if (plugin.getConfig().getBoolean("elite-mobs." + typeId + ".boss-bar", true)) {
                         plugin.getEffectsManager().createBossBar(le, type.getDisplayName(), getBarColor(typeId));
+                    } else {
+                        plugin.getEffectsManager().removeBossBar(le.getUniqueId());
                     }
                 }
             }

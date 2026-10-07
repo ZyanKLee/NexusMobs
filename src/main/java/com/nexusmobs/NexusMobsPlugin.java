@@ -120,6 +120,11 @@ public class NexusMobsPlugin extends JavaPlugin {
         if (modelManager != null) {
             modelManager.cleanup();
         }
+
+        // Hide boss bars; cancelling their tasks alone would leave them on screen (#6)
+        if (effectsManager != null) {
+            effectsManager.cleanup();
+        }
         
         // Cancel all scheduled tasks
         getServer().getScheduler().cancelTasks(this);
