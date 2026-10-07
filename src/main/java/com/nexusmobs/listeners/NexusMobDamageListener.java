@@ -31,19 +31,14 @@ public class NexusMobDamageListener implements Listener {
         
         // Check if the damager is an elite mob
         if (plugin.getNexusMobManager().isNexusMob(damager)) {
-            handleNexusMobAttack(event, damager, victim);
-        }
-        
-        // Check if the victim is an elite mob being attacked by player
-        if (plugin.getNexusMobManager().isNexusMob(victim) && damager instanceof Player) {
-            handlePlayerAttackElite(event, (Player) damager, victim);
+            handleNexusMobAttack(damager, victim);
         }
     }
     
     /**
      * Handle when an elite mob attacks something
      */
-    private void handleNexusMobAttack(EntityDamageByEntityEvent event, Entity damager, Entity victim) {
+    private void handleNexusMobAttack(Entity damager, Entity victim) {
         if (!(damager instanceof LivingEntity)) {
             return;
         }
@@ -93,14 +88,6 @@ public class NexusMobDamageListener implements Listener {
             ConfigurationSection teleportConfig = abilitiesConfig.getConfigurationSection("teleport-attack");
             abilityManager.handleTeleportAttackAbility(nexusMob, victim, teleportConfig);
         }
-    }
-    
-    /**
-     * Handle when a player attacks an elite mob
-     */
-    private void handlePlayerAttackElite(EntityDamageByEntityEvent event, Player attacker, Entity victim) {
-        // Track damage for statistics (could be expanded)
-        // The actual stat recording happens on death
     }
     
     /**

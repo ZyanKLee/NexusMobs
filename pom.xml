@@ -30,6 +30,11 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.5.2</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>3.5.0</version>
                 <executions>
@@ -44,18 +49,25 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- Checkstyle: report style issues, does not fail build -->
+            <!-- Checkstyle: small actionable ruleset (checkstyle.xml), fails the build (#25) -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>3.3.1</version>
+                <version>3.6.0</version>
+                <dependencies>
+                    <!-- 10.x understands Java 21 syntax; the plugin's default (9.3) does not -->
+                    <dependency>
+                        <groupId>com.puppycrawl.tools</groupId>
+                        <artifactId>checkstyle</artifactId>
+                        <version>10.26.1</version>
+                    </dependency>
+                </dependencies>
                 <configuration>
-                    <configLocation>sun_checks.xml</configLocation>
+                    <configLocation>checkstyle.xml</configLocation>
                     <consoleOutput>true</consoleOutput>
-                    <failOnViolation>false</failOnViolation>
+                    <failOnViolation>true</failOnViolation>
                     <violationSeverity>warning</violationSeverity>
-                    <includeTestSourceDirectory>false</includeTestSourceDirectory>
-                    <suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
+                    <includeTestSourceDirectory>true</includeTestSourceDirectory>
                 </configuration>
                 <executions>
                     <execution>
@@ -86,16 +98,19 @@
                 </executions>
             </plugin>
 
-            <!-- PMD: report code quality issues, does not fail build -->
+            <!-- PMD 7 (plugin 3.22+): PMD 6 cannot read Java 21 class files (#23).
+                 Default ruleset is clean, so new findings fail the build. -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-pmd-plugin</artifactId>
-                <version>3.21.2</version>
+                <version>3.28.0</version>
                 <configuration>
-                    <failOnViolation>false</failOnViolation>
+                    <failOnViolation>true</failOnViolation>
                     <printFailingErrors>true</printFailingErrors>
-                    <targetJdk>17</targetJdk>
+                    <targetJdk>${java.version}</targetJdk>
                     <includeTests>false</includeTests>
+                    <!-- a broken analyser must fail the build instead of producing an empty report -->
+                    <skipPmdError>false</skipPmdError>
                 </configuration>
                 <executions>
                     <execution>
@@ -131,6 +146,21 @@
             <artifactId>paper-api</artifactId>
             <version>1.21.3-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
+        </dependency>
+
+        <!-- Tests (#24). MockBukkit 4.20.0 is built against paper-api 1.21.3;
+             bump both together (4.30.0 -> 1.21.4, ...). Resolved via papermc-repo. -->
+        <dependency>
+            <groupId>org.mockbukkit.mockbukkit</groupId>
+            <artifactId>mockbukkit-v1.21</artifactId>
+            <version>4.20.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.11.3</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

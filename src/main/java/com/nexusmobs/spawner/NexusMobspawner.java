@@ -49,7 +49,7 @@ public class NexusMobspawner {
         cancelScheduledSpawns();
         double minHours = plugin.getConfigManager().getMinSpawnIntervalHours();
         double maxHours = plugin.getConfigManager().getMaxSpawnIntervalHours();
-        double hoursDelay = minHours + random.nextDouble() * Math.max(0.0, (maxHours - minHours));
+        double hoursDelay = minHours + random.nextDouble() * Math.max(0.0, maxHours - minHours);
         long ticksDelay = (long) (hoursDelay * 60 * 60 * 20L); // Convert hours to ticks
         plugin.getLogger().info("Next Nexus mob spawn scheduled in " + String.format("%.2f", hoursDelay) + " hours");
         

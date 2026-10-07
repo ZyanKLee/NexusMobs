@@ -34,7 +34,7 @@ public class NexusMobsPlugin extends JavaPlugin {
     private ConfigManager configManager;
     private com.nexusmobs.config.LanguageManager languageManager;
     private NexusMobManager nexusMobManager;
-    private NexusMobspawner NexusMobspawner;
+    private NexusMobspawner nexusMobspawner;
     private CustomItemManager customItemManager;
     private LeaderboardManager leaderboardManager;
     private GuiManager guiManager;
@@ -64,7 +64,7 @@ public class NexusMobsPlugin extends JavaPlugin {
         leaderboardManager = new LeaderboardManager(this);
         effectsManager = new EffectsManager(this);
         nexusMobManager = new NexusMobManager(this);
-        NexusMobspawner = new NexusMobspawner(this);
+        nexusMobspawner = new NexusMobspawner(this);
         guiManager = new GuiManager(this);
         resourcePackGenerator = new ResourcePackGenerator(this);
         
@@ -76,7 +76,7 @@ public class NexusMobsPlugin extends JavaPlugin {
         
         // Start spawn scheduler
         if (getConfig().getBoolean("spawn.enabled", true)) {
-            NexusMobspawner.scheduleNextSpawn();
+            nexusMobspawner.scheduleNextSpawn();
         }
         
         // Generate resource pack if configured
@@ -135,7 +135,7 @@ public class NexusMobsPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(
                 new NexusMobDamageListener(this), this);
         getServer().getPluginManager().registerEvents(
-                new ItemAbilityListener(this, customItemManager), this);
+                new ItemAbilityListener(customItemManager), this);
         getServer().getPluginManager().registerEvents(
                 new GuiListener(this, guiManager), this);
     }
@@ -174,10 +174,10 @@ public class NexusMobsPlugin extends JavaPlugin {
         
         // Refresh active mobs (update names/bossbars) instead of full cleanup to preserve entities
         nexusMobManager.updateAllMobDisplayNames();
-        NexusMobspawner.cancelScheduledSpawns();
+        nexusMobspawner.cancelScheduledSpawns();
         
         if (getConfig().getBoolean("spawn.enabled", true)) {
-            NexusMobspawner.scheduleNextSpawn();
+            nexusMobspawner.scheduleNextSpawn();
         }
     }
     
@@ -200,7 +200,7 @@ public class NexusMobsPlugin extends JavaPlugin {
     }
     
     public NexusMobspawner getNexusMobspawner() {
-        return NexusMobspawner;
+        return nexusMobspawner;
     }
     
     public CustomItemManager getCustomItemManager() {

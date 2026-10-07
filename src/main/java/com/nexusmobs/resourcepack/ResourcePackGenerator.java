@@ -140,7 +140,7 @@ public class ResourcePackGenerator {
         plugin.getCustomItemManager().getCustomItems().forEach((id, item) -> {
             if (item.getCustomModelData() > 0) {
                 try {
-                    generateItemModelFile(id, item.getMaterial());
+                    generateItemModelFile(id);
                 } catch (IOException e) {
                     plugin.getLogger().warning("Failed to generate model for item: " + id);
                 }
@@ -163,16 +163,22 @@ public class ResourcePackGenerator {
         
         JsonObject head = new JsonObject();
         JsonArray rotation = new JsonArray();
-        rotation.add(0); rotation.add(180); rotation.add(0);
+        rotation.add(0);
+        rotation.add(180);
+        rotation.add(0);
         head.add("rotation", rotation);
         
         JsonArray translation = new JsonArray();
-        translation.add(0); translation.add(0); translation.add(0);
+        translation.add(0);
+        translation.add(0);
+        translation.add(0);
         head.add("translation", translation);
         
         JsonArray scale = new JsonArray();
         double scaleVal = model.getScale();
-        scale.add(scaleVal); scale.add(scaleVal); scale.add(scaleVal);
+        scale.add(scaleVal);
+        scale.add(scaleVal);
+        scale.add(scaleVal);
         head.add("scale", scale);
         
         display.add("head", head);
@@ -183,7 +189,7 @@ public class ResourcePackGenerator {
         writeJsonFile(modelPath.toFile(), root);
     }
     
-    private void generateItemModelFile(String id, Material baseMaterial) throws IOException {
+    private void generateItemModelFile(String id) throws IOException {
         JsonObject root = new JsonObject();
         root.addProperty("parent", "minecraft:item/handheld");
         

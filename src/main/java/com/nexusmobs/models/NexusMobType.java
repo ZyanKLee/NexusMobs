@@ -5,7 +5,6 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.potion.PotionEffect;
 
 import java.util.List;
-import com.nexusmobs.models.Phase;
 
 /**
  * Represents a type of elite mob with its configuration

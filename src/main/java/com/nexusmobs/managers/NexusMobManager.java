@@ -119,7 +119,6 @@ public class NexusMobManager {
 
                 double maxHealth = type.getMaxHealth();
                 double currentHealth = entity.getHealth();
-                double percent = (currentHealth / Math.max(1.0, maxHealth)) * 100.0;
 
                 List<Phase> phases = type.getPhases();
                 if (phases == null || phases.isEmpty()) return;
@@ -137,16 +136,16 @@ public class NexusMobManager {
                     Phase phase = phases.get(targetIndex);
 
                     // Adjust attack damage attribute
-                    if (entity.getAttribute(org.bukkit.attribute.Attribute.ATTACK_DAMAGE) != null) {
+                    if (entity.getAttribute(Attribute.ATTACK_DAMAGE) != null) {
                         double base = type.getAttackDamage();
                         double newVal = base * phase.getAttackMultiplier();
-                        entity.getAttribute(org.bukkit.attribute.Attribute.ATTACK_DAMAGE).setBaseValue(newVal);
+                        entity.getAttribute(Attribute.ATTACK_DAMAGE).setBaseValue(newVal);
                     }
 
                     // Adjust armor
-                    if (entity.getAttribute(org.bukkit.attribute.Attribute.ARMOR) != null) {
+                    if (entity.getAttribute(Attribute.ARMOR) != null) {
                         double baseArmor = type.getArmor();
-                        entity.getAttribute(org.bukkit.attribute.Attribute.ARMOR).setBaseValue(baseArmor + phase.getArmorBonus());
+                        entity.getAttribute(Attribute.ARMOR).setBaseValue(baseArmor + phase.getArmorBonus());
                     }
 
                     // Apply potion effects for this phase
@@ -182,10 +181,10 @@ public class NexusMobManager {
                     // Final-phase special: make stronger and more dramatic
                     if (targetIndex == phases.size() - 1) {
                         // Increase max health and set to full
-                        if (entity.getAttribute(org.bukkit.attribute.Attribute.MAX_HEALTH) != null) {
-                            double curMax = entity.getAttribute(org.bukkit.attribute.Attribute.MAX_HEALTH).getBaseValue();
+                        if (entity.getAttribute(Attribute.MAX_HEALTH) != null) {
+                            double curMax = entity.getAttribute(Attribute.MAX_HEALTH).getBaseValue();
                             double newMax = Math.max(curMax, type.getMaxHealth()) * 1.25;
-                            entity.getAttribute(org.bukkit.attribute.Attribute.MAX_HEALTH).setBaseValue(newMax);
+                            entity.getAttribute(Attribute.MAX_HEALTH).setBaseValue(newMax);
                             entity.setHealth(newMax);
                         }
 

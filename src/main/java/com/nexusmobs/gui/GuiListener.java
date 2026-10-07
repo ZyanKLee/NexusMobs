@@ -1,8 +1,6 @@
 package com.nexusmobs.gui;
 
 import com.nexusmobs.NexusMobsPlugin;
-import com.nexusmobs.loot.CustomItem;
-import com.nexusmobs.models.NexusMobType;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -12,7 +10,6 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.Map;
 
 /**
  * Handles GUI click events
@@ -59,6 +56,8 @@ public class GuiListener implements Listener {
             case GuiManager.ITEMS_MENU_TITLE:
                 handleItemsMenuClick(player, clicked, displayName);
                 break;
+            default:
+                break;
         }
     }
     
@@ -84,6 +83,8 @@ public class GuiListener implements Listener {
             case "Custom Items":
                 guiManager.openItemsMenu(player);
                 break;
+            default:
+                break; // border / info item
         }
     }
     
