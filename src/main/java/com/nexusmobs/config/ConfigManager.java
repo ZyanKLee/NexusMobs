@@ -221,6 +221,9 @@ public class ConfigManager {
             }
         }
 
+        // Highest threshold first, so the phase watcher can walk them in order (#4)
+        phases.sort(Comparator.comparingDouble((Phase p) -> p.thresholdPercentOf(maxHealth)).reversed());
+
         // If no phases configured, inject a sensible default Next Phase that activates at 50% HP
         if (phases.isEmpty()) {
             // default: at 50% HP, +25% attack, +2 armor, no potion effects
