@@ -123,7 +123,7 @@ public class ItemAbilityListener implements Listener {
                         break;
                     case REFLECT_PROJECTILES:
                         if (event.getDamager() instanceof Projectile) {
-                            handleReflectProjectile(player, (Projectile) event.getDamager());
+                            handleReflectProjectile(event, player, (Projectile) event.getDamager());
                         }
                         break;
                     default:
@@ -296,7 +296,7 @@ public class ItemAbilityListener implements Listener {
         event.setDamage(event.getDamage() * reduction);
     }
     
-    private void handleReflectProjectile(Player player, Projectile projectile) {
+    private void handleReflectProjectile(EntityDamageByEntityEvent event, Player player, Projectile projectile) {
         if (projectile.getShooter() instanceof LivingEntity) {
             LivingEntity shooter = (LivingEntity) projectile.getShooter();
             
@@ -306,6 +306,8 @@ public class ItemAbilityListener implements Listener {
             
             projectile.setVelocity(direction.multiply(projectile.getVelocity().length()));
             projectile.setShooter(player);
+            // the projectile is sent back, so it must not also hit the player (#8)
+            event.setCancelled(true);
             
             player.getWorld().playSound(player.getLocation(), Sound.ITEM_SHIELD_BLOCK, 1f, 1.5f);
         }
