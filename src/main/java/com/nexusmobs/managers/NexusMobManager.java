@@ -310,12 +310,17 @@ public class NexusMobManager {
      * Get count of active elite mobs
      */
     public int getActiveNexusMobCount() {
-        // Clean up invalid mobs first
-        activeNexusMobs.entrySet().removeIf(entry -> {
-            Entity entity = Bukkit.getEntity(entry.getKey());
-            return entity == null || !entity.isValid() || entity.isDead();
-        });
-        
+        // Clean up invalid mobs first. Go through removeNexusMob() so their ability tasks,
+        // phase watcher and model are released too, not just the map entry (#3).
+        List<UUID> stale = new ArrayList<>();
+        for (UUID uuid : activeNexusMobs.keySet()) {
+            Entity entity = Bukkit.getEntity(uuid);
+            if (entity == null || !entity.isValid() || entity.isDead()) {
+                stale.add(uuid);
+            }
+        }
+        stale.forEach(this::removeNexusMob);
+
         return activeNexusMobs.size();
     }
     
