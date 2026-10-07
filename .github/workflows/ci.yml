@@ -5,9 +5,8 @@ on:
     branches:
       - main
       - 'claude/**'
+  # all target branches, so stacked PRs (base = another PR's branch) get CI too
   pull_request:
-    branches:
-      - main
 
 jobs:
   build:
