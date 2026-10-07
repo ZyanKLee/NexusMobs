@@ -3,9 +3,8 @@ package com.nexusmobs.config;
 import com.nexusmobs.NexusMobsPlugin;
 import com.nexusmobs.models.NexusMobType;
 import com.nexusmobs.models.LootDrop;
+import com.nexusmobs.util.PotionEffects;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.Registry;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
 import org.bukkit.potion.PotionEffect;
@@ -115,7 +114,7 @@ public class ConfigManager {
                 int level = levelObj instanceof Number ? ((Number) levelObj).intValue() : 1;
                 int duration = durationObj instanceof Number ? ((Number) durationObj).intValue() : Integer.MAX_VALUE;
 
-                PotionEffectType type = getPotionEffectType(typeStr);
+                PotionEffectType type = PotionEffects.resolve(typeStr);
                 if (type != null) {
                     // У PotionEffect рівень починається з 0, тому level - 1
                     potionEffects.add(new PotionEffect(type, duration, level - 1, false, false));
@@ -201,7 +200,7 @@ public class ConfigManager {
                         Object durObj = em.get("duration-ticks");
                         int level = lvlObj instanceof Number ? ((Number) lvlObj).intValue() : 1;
                         int duration = durObj instanceof Number ? ((Number) durObj).intValue() : Integer.MAX_VALUE;
-                        PotionEffectType pet = getPotionEffectType(typeStr);
+                        PotionEffectType pet = PotionEffects.resolve(typeStr);
                         if (pet != null) {
                             phaseEffects.add(new PotionEffect(pet, duration, Math.max(0, level - 1), false, false));
                         }
@@ -235,36 +234,6 @@ public class ConfigManager {
             abilitiesSection,
             phases
         );
-    }
-
-    /**
-     * Get PotionEffectType by name (compatible with Paper 1.21+)
-     */
-    private PotionEffectType getPotionEffectType(String name) {
-        if (name == null) return null;
-
-        // Normalize legacy names
-        String normalizedName = name.toUpperCase(Locale.ROOT)
-                .replace("INCREASE_DAMAGE", "STRENGTH")
-                .replace("DAMAGE_RESISTANCE", "RESISTANCE")
-                .replace("SLOW", "SLOWNESS")
-                .replace("FAST_DIGGING", "HASTE")
-                .replace("SLOW_DIGGING", "MINING_FATIGUE")
-                .replace("JUMP", "JUMP_BOOST")
-                .replace("CONFUSION", "NAUSEA")
-                .replace("HARM", "INSTANT_DAMAGE")
-                .replace("HEAL", "INSTANT_HEALTH");
-
-        try {
-            NamespacedKey key = NamespacedKey.minecraft(normalizedName.toLowerCase(Locale.ROOT));
-            return Registry.POTION_EFFECT_TYPE.get(key);
-        } catch (Exception e) {
-            try {
-                return PotionEffectType.getByName(name);
-            } catch (Exception ignored) {
-                return null;
-            }
-        }
     }
 
     /**
