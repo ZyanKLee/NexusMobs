@@ -3,17 +3,28 @@ package com.nexusmobs.effects;
 import com.nexusmobs.NexusMobsPlugin;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Manages visual and sound effects for elite mobs
  */
 public class EffectsManager {
     
+    private static final double BOSS_BAR_RANGE_SQUARED = 60.0 * 60.0;
+
     private final NexusMobsPlugin plugin;
+    private final Map<UUID, ActiveBossBar> bossBars = new HashMap<>();
     
     public EffectsManager(NexusMobsPlugin plugin) {
         this.plugin = plugin;
@@ -247,34 +258,40 @@ public class EffectsManager {
     }
     
     /**
-     * Play boss bar progress effect
+     * Create the boss bar for an elite mob, or update title and colour if the mob already has one.
+     * Exactly one bar and one updater task exist per mob, however often this is called (#6).
      */
-    public void createBossBar(LivingEntity entity, String name, org.bukkit.boss.BarColor color) {
-        org.bukkit.boss.BossBar bossBar = Bukkit.createBossBar(
-                name,
-                color,
-                org.bukkit.boss.BarStyle.SEGMENTED_10
-        );
-        
+    public void createBossBar(LivingEntity entity, String name, BarColor color) {
+        UUID id = entity.getUniqueId();
+        ActiveBossBar existing = bossBars.get(id);
+        if (existing != null && existing.entity == entity) {
+            existing.bar.setTitle(name);
+            existing.bar.setColor(color);
+            return;
+        }
+        // a new Entity object for the same mob (chunk reloaded): rebuild the updater for it
+        removeBossBar(id);
+
+        BossBar bossBar = Bukkit.createBossBar(name, color, BarStyle.SEGMENTED_10);
+
         // Update boss bar progress with entity health
-        new BukkitRunnable() {
+        BukkitRunnable updater = new BukkitRunnable() {
             @Override
             public void run() {
                 if (!entity.isValid() || entity.isDead()) {
-                    bossBar.removeAll();
-                    cancel();
+                    removeBossBar(id);
                     return;
                 }
-                
+
                 // Paper 1.21+ uses Attribute.MAX_HEALTH
                 double maxHealth = 100;
                 if (entity.getAttribute(Attribute.MAX_HEALTH) != null) {
                     maxHealth = entity.getAttribute(Attribute.MAX_HEALTH).getValue();
                 }
-                
+
                 double progress = entity.getHealth() / maxHealth;
                 bossBar.setProgress(Math.max(0, Math.min(1, progress)));
-                
+
                 // Add nearby players to boss bar
                 for (Entity nearby : entity.getNearbyEntities(50, 50, 50)) {
                     if (nearby instanceof Player) {
@@ -284,15 +301,63 @@ public class EffectsManager {
                         }
                     }
                 }
-                
-                // Remove far players
+
+                // Remove far players (and players in another world: distance() would throw)
+                Location mobLocation = entity.getLocation();
                 for (Player player : bossBar.getPlayers()) {
-                    if (player.getLocation().distance(entity.getLocation()) > 60) {
+                    Location playerLocation = player.getLocation();
+                    if (playerLocation.getWorld() != mobLocation.getWorld()
+                            || playerLocation.distanceSquared(mobLocation) > BOSS_BAR_RANGE_SQUARED) {
                         bossBar.removePlayer(player);
                     }
                 }
             }
-        }.runTaskTimer(plugin, 0, 5);
+        };
+        updater.runTaskTimer(plugin, 0, 5);
+        bossBars.put(id, new ActiveBossBar(entity, bossBar, updater));
+    }
+
+    /**
+     * Hide the mob's boss bar from all players and stop its updater.
+     */
+    public void removeBossBar(UUID entityId) {
+        ActiveBossBar active = bossBars.remove(entityId);
+        if (active != null) {
+            active.bar.removeAll();
+            if (!active.updater.isCancelled()) {
+                active.updater.cancel();
+            }
+        }
+    }
+
+    /**
+     * The mob's boss bar, or null if it has none.
+     */
+    public BossBar getBossBar(UUID entityId) {
+        ActiveBossBar active = bossBars.get(entityId);
+        return active == null ? null : active.bar;
+    }
+
+    /**
+     * Remove every boss bar (plugin disable). Cancelling the tasks alone would leave the
+     * bars on the players' screens.
+     */
+    public void cleanup() {
+        for (UUID id : new ArrayList<>(bossBars.keySet())) {
+            removeBossBar(id);
+        }
+    }
+
+    private static final class ActiveBossBar {
+        private final LivingEntity entity;
+        private final BossBar bar;
+        private final BukkitRunnable updater;
+
+        private ActiveBossBar(LivingEntity entity, BossBar bar, BukkitRunnable updater) {
+            this.entity = entity;
+            this.bar = bar;
+            this.updater = updater;
+        }
     }
 }
 
