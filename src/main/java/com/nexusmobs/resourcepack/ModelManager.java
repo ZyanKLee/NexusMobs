@@ -99,6 +99,8 @@ public class ModelManager {
         stand.setInvulnerable(true);
         stand.setBasePlate(false);
         stand.setArms(false);
+        // display only: never save it with the chunk, it is re-created when the mob is loaded (#22)
+        stand.setPersistent(false);
         
         // Create model item with CustomModelData
         ItemStack modelItem = createModelItem(model);
@@ -132,7 +134,12 @@ public class ModelManager {
             @Override
             public void run() {
                 if (!entity.isValid() || entity.isDead() || !stand.isValid()) {
-                    removeModel(entity.getUniqueId());
+                    // only this task's own stand: the mob may already have a new one after a
+                    // chunk reload (#22), registered under the same UUID
+                    modelArmorStands.remove(entity.getUniqueId(), stand);
+                    if (stand.isValid()) {
+                        stand.remove();
+                    }
                     cancel();
                     return;
                 }
